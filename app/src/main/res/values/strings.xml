@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">EmotionsDiary</string>
+    <string name="title_emotion">Emotion</string>
+    <string name="title_statistic">Statistic</string>
+    <string name="title_notifications">Notifications</string>
+</resources>
