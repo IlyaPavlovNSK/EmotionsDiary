@@ -9,7 +9,7 @@ public class ArrayEmotions {
     public static ArrayList<EmotionItem> createEmotions(){
         ArrayList<EmotionItem> emotionItems = new ArrayList<>();
 
-        emotionItems.add(new EmotionItem("name1", "level1", R.drawable.ic_emotion));
+        emotionItems.add(new EmotionItem("name1", "level1", R.drawable.redwood));
         emotionItems.add(new EmotionItem("name2", "level2", R.drawable.ic_emotion));
         emotionItems.add(new EmotionItem("name3", "level3", R.drawable.ic_emotion));
 

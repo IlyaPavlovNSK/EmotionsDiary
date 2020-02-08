@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import com.pavlovnsk.emotionsdiary.R;
 import java.util.ArrayList;
 
 public class EmotionsFragment extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -27,14 +30,12 @@ public class EmotionsFragment extends Fragment {
 
         RecyclerView recyclerViewEmotions = view.findViewById(R.id.recycler_view_emotions);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),  RecyclerView.HORIZONTAL, false);
-        recyclerViewEmotions.setLayoutManager(layoutManager);
-
         ArrayList <EmotionItem> emotionItems = ArrayEmotions.createEmotions();
-
         EmotionsAdapter emotionsAdapter = new EmotionsAdapter(emotionItems);
+
+        recyclerViewEmotions.setLayoutManager(layoutManager);
         recyclerViewEmotions.setAdapter(emotionsAdapter);
         recyclerViewEmotions.setHasFixedSize(true);
-
         return view;
     }
 }

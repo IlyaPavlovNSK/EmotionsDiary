@@ -9,6 +9,14 @@
     android:background="@android:color/darker_gray"
     android:layout_margin="8dp">
 
+    <SeekBar
+        android:id="@+id/emotion_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:rotation="-90"
+        android:max="200"
+        android:progressDrawable="@android:color/transparent"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
