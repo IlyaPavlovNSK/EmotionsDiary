@@ -19,13 +19,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navigation_emotion:
                     mTextMessage.setText(R.string.title_emotion);
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_statistic:
                     mTextMessage.setText(R.string.title_statistic);
                     return true;
-                case R.id.navigation_notifications:
+                case R.id.navigation_info:
                     mTextMessage.setText(R.string.title_info);
                     return true;
             }
