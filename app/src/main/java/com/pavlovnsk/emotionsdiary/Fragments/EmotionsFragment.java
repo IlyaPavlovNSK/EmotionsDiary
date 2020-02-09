@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pavlovnsk.emotionsdiary.Adapters.EmotionsAdapter;
+import com.pavlovnsk.emotionsdiary.Adapters.EmotionsListPresenter;
 import com.pavlovnsk.emotionsdiary.ArrayEmotions;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.R;
@@ -31,7 +32,7 @@ public class EmotionsFragment extends Fragment {
         RecyclerView recyclerViewEmotions = view.findViewById(R.id.recycler_view_emotions);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),  RecyclerView.HORIZONTAL, false);
         ArrayList <EmotionItem> emotionItems = ArrayEmotions.createEmotions();
-        EmotionsAdapter emotionsAdapter = new EmotionsAdapter(emotionItems);
+        EmotionsAdapter emotionsAdapter = new EmotionsAdapter(new EmotionsListPresenter(emotionItems));
 
         recyclerViewEmotions.setLayoutManager(layoutManager);
         recyclerViewEmotions.setAdapter(emotionsAdapter);

@@ -10,8 +10,8 @@ public class ArrayEmotions {
         ArrayList<EmotionItem> emotionItems = new ArrayList<>();
 
         emotionItems.add(new EmotionItem("name1", "0 %", R.drawable.redwood));
-        emotionItems.add(new EmotionItem("name2", "0 %", R.drawable.ic_emotion));
-        emotionItems.add(new EmotionItem("name3", "0 %", R.drawable.ic_emotion));
+        emotionItems.add(new EmotionItem("name2", "0 %", R.drawable.redwood));
+        emotionItems.add(new EmotionItem("name3", "0 %", R.drawable.redwood));
 
         return emotionItems;
     }

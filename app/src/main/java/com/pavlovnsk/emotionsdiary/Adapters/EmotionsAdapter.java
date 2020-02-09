@@ -1,5 +1,9 @@
 package com.pavlovnsk.emotionsdiary.Adapters;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,48 +12,50 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
+import com.pavlovnsk.emotionsdiary.Fragments.EmotionDialog;
+import com.pavlovnsk.emotionsdiary.Fragments.EmotionsFragment;
+import com.pavlovnsk.emotionsdiary.MainActivity;
 import com.pavlovnsk.emotionsdiary.R;
-
-import java.util.ArrayList;
 
 public class EmotionsAdapter extends RecyclerView.Adapter<EmotionsAdapter.EmotionViewHolder> {
 
-    private ArrayList<EmotionItem> emotions;
+    private EmotionsListPresenter presenter;
 
-    public EmotionsAdapter(ArrayList<EmotionItem> emotions) {
-        this.emotions = emotions;
+    public EmotionsAdapter(EmotionsListPresenter presenter) {
+        this.presenter = presenter;
     }
 
     @NonNull
     @Override
     public EmotionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.emotion_item, parent, false);
-        return new EmotionViewHolder(view);
+        return new EmotionViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.emotion_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull EmotionViewHolder holder, int position) {
-        EmotionItem emotionItem = emotions.get(position);
-
-        holder.emotionLevel.setText(emotionItem.getEmotionLevel());
-        holder.emotionName.setText(emotionItem.getEmotionName());
-        holder.emotionPic.setImageResource(emotionItem.getEmotionPic());
+        presenter.onBindEmotionsRowViewAtPosition(position, holder);
     }
 
     @Override
     public int getItemCount() {
-        return emotions.size();
+        return presenter.getEmotionsRowsCount();
     }
 
-    static class EmotionViewHolder extends RecyclerView.ViewHolder implements SeekBar.OnSeekBarChangeListener {
+
+
+
+
+    public class EmotionViewHolder extends RecyclerView.ViewHolder implements EmotionRowView, SeekBar.OnSeekBarChangeListener {
 
         private TextView emotionLevel;
         private TextView emotionName;
         private ImageFilterView emotionPic;
         private SeekBar emotionSeekBar;
+        private Context context;
 
         public EmotionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,9 +64,25 @@ public class EmotionsAdapter extends RecyclerView.Adapter<EmotionsAdapter.Emotio
             emotionPic = itemView.findViewById(R.id.emotion_pic);
             emotionSeekBar = itemView.findViewById(R.id.emotion_seekbar);
 
+            context = itemView.getContext();
+
             emotionSeekBar.setOnSeekBarChangeListener(this);
             emotionSeekBar.getThumb().mutate().setAlpha(0);
+        }
 
+        @Override
+        public void setEmotionLevel(String level) {
+            emotionLevel.setText(level);
+        }
+
+        @Override
+        public void setEmotionName(String name) {
+            emotionName.setText(name);
+        }
+
+        @Override
+        public void setPictureId(int id) {
+            emotionPic.setImageResource(id);
         }
 
         @Override
@@ -71,10 +93,19 @@ public class EmotionsAdapter extends RecyclerView.Adapter<EmotionsAdapter.Emotio
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
+
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
+            Bundle args = new Bundle();
+            args.putString("name", emotionName.getText().toString());
+            args.putString("level", emotionLevel.getText().toString());
+
+            EmotionDialog emotionDialog = new EmotionDialog();
+            emotionDialog.setArguments(args);
+
+            emotionDialog.onCreateEmotionDialog(args, context).show();
         }
     }
 }

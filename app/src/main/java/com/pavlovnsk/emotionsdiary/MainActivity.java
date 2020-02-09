@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.pavlovnsk.emotionsdiary.Adapters.EmotionsAdapter;
+import com.pavlovnsk.emotionsdiary.Fragments.EmotionDialog;
 import com.pavlovnsk.emotionsdiary.Fragments.EmotionsFragment;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 

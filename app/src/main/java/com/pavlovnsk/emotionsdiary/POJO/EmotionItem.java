@@ -1,22 +1,15 @@
 package com.pavlovnsk.emotionsdiary.POJO;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-
 public class EmotionItem {
 
     private String emotionName;
     private String emotionLevel;
     private int emotionPic;
-    private Bitmap bitmap;
 
     public EmotionItem(String emotionName, String aemotionLevel, int emotionPic) {
         this.emotionName = emotionName;
         this.emotionLevel = aemotionLevel;
         this.emotionPic = emotionPic;
-        this.bitmap = BitmapFactory.decodeResource(Resources.getSystem(), emotionPic);
     }
 
     public String getEmotionName() {
@@ -29,10 +22,6 @@ public class EmotionItem {
 
     public int getEmotionPic() {
         return emotionPic;
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
     }
 
     public void setEmotionName(String emotionName) {
