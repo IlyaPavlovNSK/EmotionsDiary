@@ -85,7 +85,6 @@ public class EmotionsAdapter extends RecyclerView.Adapter<EmotionsAdapter.Emotio
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
         }
 
         @Override

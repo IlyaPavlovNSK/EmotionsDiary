@@ -12,6 +12,14 @@ public class EmotionItem {
         this.emotionPic = emotionPic;
     }
 
+    public EmotionItem(String emotionName, String emotionLevel) {
+        this.emotionName = emotionName;
+        this.emotionLevel = emotionLevel;
+    }
+
+    public EmotionItem() {
+    }
+
     public String getEmotionName() {
         return emotionName;
     }

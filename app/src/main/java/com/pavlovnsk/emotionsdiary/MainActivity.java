@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.pavlovnsk.emotionsdiary.Fragments.EmotionsFragment;
+import com.pavlovnsk.emotionsdiary.Fragments.StatisticsFragment;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new EmotionsFragment();
                     break;
                 case R.id.navigation_statistic:
-
+                    selectedFragment = new StatisticsFragment();
                     break;
                 case R.id.navigation_info:
 
