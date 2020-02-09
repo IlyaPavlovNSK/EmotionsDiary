@@ -17,6 +17,9 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.pavlovnsk.emotionsdiary.ArrayEmotions;
+import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
+import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +37,8 @@ public class StatisticsFragment extends Fragment {
     private Calendar calendar = Calendar.getInstance();
     private SlyCalendarDialog dialog = new SlyCalendarDialog();
     private SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd");
+    private Date dateBefore;
+    private Date dateAfter;
 
     @Nullable
     @Override
@@ -55,22 +60,6 @@ public class StatisticsFragment extends Fragment {
         pieChart.setHoleColor(Color.WHITE);
         pieChart.setTransparentCircleRadius(61f);
 
-        ArrayList<PieEntry> values = new ArrayList<>();
-
-        values.add(new PieEntry(40, "emo1"));
-        values.add(new PieEntry(40, "emo2"));
-
-        PieDataSet pieDataSet = new PieDataSet(values, "Emotions");
-        pieDataSet.setSliceSpace(3f);
-        pieDataSet.setSelectionShift(5f);
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
-        PieData data = new PieData(pieDataSet);
-        data.setValueTextSize(10f);
-        data.setValueTextColor(Color.YELLOW);
-
-        pieChart.setData(data);
-
         return view;
     }
 
@@ -90,15 +79,44 @@ public class StatisticsFragment extends Fragment {
         @Override
         public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
             if (firstDate != null) {
-                Date dateBefore = firstDate.getTime();
+                dateBefore = firstDate.getTime();
                 String f = formatForDateNow.format(dateBefore);
                 after.setText(f);
                 if (secondDate != null) {
-                    Date dateAfter = secondDate.getTime();
+                    dateAfter = secondDate.getTime();
                     String s = formatForDateNow.format(dateAfter);
                     before.setText(s);
                 }
             }
+
+            ArrayList<PieEntry> values = new ArrayList<>();
+
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
+            ArrayList<EmotionItem> emotionItems = dataBaseHelper.getEmotions(dateAfter, dateBefore);
+            ArrayList<EmotionItem> items = ArrayEmotions.createEmotions();
+
+
+            for (int i = 0; i <items.size() ; i++) {
+                int value = 0;
+                for (int j = 0; j <emotionItems.size() ; j++) {
+                    if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName())){
+                        value = value + Integer.parseInt(emotionItems.get(j).getEmotionLevel());
+                    }
+                }
+                values.add(new PieEntry(value, items.get(i)));
+            }
+
+            PieDataSet pieDataSet = new PieDataSet(values, "Emotions");
+
+            pieDataSet.setSliceSpace(3f);
+            pieDataSet.setSelectionShift(5f);
+            pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+            PieData data = new PieData(pieDataSet);
+            data.setValueTextSize(10f);
+            data.setValueTextColor(Color.YELLOW);
+
+            pieChart.setData(data);
         }
     };
 }

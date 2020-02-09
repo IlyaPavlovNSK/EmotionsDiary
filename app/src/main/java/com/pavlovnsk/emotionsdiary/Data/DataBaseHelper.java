@@ -53,9 +53,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<EmotionItem> getEmotions (Date dateAfter, Date dateBefore){
+    public ArrayList<EmotionItem> getEmotions (Date dateAfter, Date dateBefore){
         SQLiteDatabase db = this.getReadableDatabase();
-        List<EmotionItem> emotions = new ArrayList<>();
+        ArrayList<EmotionItem> emotions = new ArrayList<>();
 
         String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME;
         Cursor cursor = db.rawQuery(selectEmotions, null);
