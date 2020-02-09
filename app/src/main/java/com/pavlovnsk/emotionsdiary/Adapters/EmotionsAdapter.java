@@ -1,7 +1,5 @@
 package com.pavlovnsk.emotionsdiary.Adapters;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,16 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.pavlovnsk.emotionsdiary.Fragments.EmotionDialog;
-import com.pavlovnsk.emotionsdiary.Fragments.EmotionsFragment;
-import com.pavlovnsk.emotionsdiary.MainActivity;
 import com.pavlovnsk.emotionsdiary.R;
 
 public class EmotionsAdapter extends RecyclerView.Adapter<EmotionsAdapter.EmotionViewHolder> {

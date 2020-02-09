@@ -3,21 +3,11 @@ package com.pavlovnsk.emotionsdiary;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.pavlovnsk.emotionsdiary.Adapters.EmotionsAdapter;
-import com.pavlovnsk.emotionsdiary.Fragments.EmotionDialog;
 import com.pavlovnsk.emotionsdiary.Fragments.EmotionsFragment;
-import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
