@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.pavlovnsk.emotionsdiary.Adapters.EmotionsAdapter;
 import com.pavlovnsk.emotionsdiary.Adapters.EmotionsListPresenter;
@@ -37,6 +39,8 @@ public class EmotionsFragment extends Fragment {
         recyclerViewEmotions.setLayoutManager(layoutManager);
         recyclerViewEmotions.setAdapter(emotionsAdapter);
         recyclerViewEmotions.setHasFixedSize(true);
+        SnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerViewEmotions);
         return view;
     }
 }

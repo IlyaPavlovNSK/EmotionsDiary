@@ -39,7 +39,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void addEmotion(EmotionItem item){
 
         Date dateNow = new Date();
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
         String time =  formatForDateNow.format(dateNow);
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -53,19 +53,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<EmotionItem> getEmotions (Date dateAfter, Date dateBefore){
+    public ArrayList<EmotionItem> getEmotions (Date date1, Date date2){
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<EmotionItem> emotions = new ArrayList<>();
 
         String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME;
         Cursor cursor = db.rawQuery(selectEmotions, null);
 
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
 
         if (cursor.moveToFirst()){
             do {
                 try {
-                    if(formatForDateNow.parse(cursor.getString(3)).after(dateAfter)&&formatForDateNow.parse(cursor.getString(3)).before(dateBefore)){
+                    if(formatForDateNow.parse(cursor.getString(3).trim()).before(date2)&&formatForDateNow.parse(cursor.getString(3).trim()).after(date1)){
 
                         EmotionItem emotionItem = new EmotionItem();
                         emotionItem.setEmotionName(cursor.getString(1));

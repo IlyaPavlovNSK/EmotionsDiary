@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -32,13 +33,13 @@ public class StatisticsFragment extends Fragment {
 
     private PieChart pieChart;
     private Button btnData;
-    private TextView before;
-    private TextView after;
+    private TextView textViewDate2;
+    private TextView textViewDate1;
     private Calendar calendar = Calendar.getInstance();
     private SlyCalendarDialog dialog = new SlyCalendarDialog();
-    private SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy.MM.dd");
-    private Date dateBefore;
-    private Date dateAfter;
+    private SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
+    private Date date1;
+    private Date date2;
 
     @Nullable
     @Override
@@ -47,18 +48,36 @@ public class StatisticsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
         pieChart = view.findViewById(R.id.pie_chart);
         btnData = view.findViewById(R.id.btn_data);
-        before = view.findViewById(R.id.tv_before);
-        after = view.findViewById(R.id.tv_after);
+        textViewDate1 = view.findViewById(R.id.text_View_Date1);
+        textViewDate2 = view.findViewById(R.id.text_View_Date2);
 
         btnData.setOnClickListener(listener);
 
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
-        pieChart.setExtraOffsets(5, 10, 5, 5);
+        pieChart.setExtraOffsets(5, 5, 5, 5);
         pieChart.setDragDecelerationFrictionCoef(0.95f);
         pieChart.setDrawHoleEnabled(true);
+        //цвет внутреннего круга
         pieChart.setHoleColor(Color.WHITE);
+        pieChart.animateXY(3000, 3000);
+        //диаметр прозрачного круга
         pieChart.setTransparentCircleRadius(61f);
+        pieChart.setMaxAngle(360f);
+        //отображет текст при пустой диаграмме
+        pieChart.setNoDataText("выберите даты");
+
+
+
+        Legend legend = pieChart.getLegend();
+        legend.setWordWrapEnabled(true);
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setMaxSizePercent(0.5f);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        //legend.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+
+
 
         return view;
     }
@@ -79,44 +98,57 @@ public class StatisticsFragment extends Fragment {
         @Override
         public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
             if (firstDate != null) {
-                dateBefore = firstDate.getTime();
-                String f = formatForDateNow.format(dateBefore);
-                after.setText(f);
+                date1 = firstDate.getTime();
+                String f = formatForDateNow.format(date1);
+                textViewDate1.setText(f);
                 if (secondDate != null) {
-                    dateAfter = secondDate.getTime();
-                    String s = formatForDateNow.format(dateAfter);
-                    before.setText(s);
+                    date2 = secondDate.getTime();
+                    String s = formatForDateNow.format(date2);
+                    textViewDate2.setText(s);
                 }
             }
 
             ArrayList<PieEntry> values = new ArrayList<>();
 
             DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-            ArrayList<EmotionItem> emotionItems = dataBaseHelper.getEmotions(dateAfter, dateBefore);
+            ArrayList<EmotionItem> emotionItems = dataBaseHelper.getEmotions(date1, date2);
             ArrayList<EmotionItem> items = ArrayEmotions.createEmotions();
 
-
             for (int i = 0; i <items.size() ; i++) {
-                int value = 0;
+                float valuePlus = 0;
                 for (int j = 0; j <emotionItems.size() ; j++) {
-                    if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName())){
-                        value = value + Integer.parseInt(emotionItems.get(j).getEmotionLevel());
+                    if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) &&
+                            Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2))>0){
+                        valuePlus = valuePlus + Float.parseFloat(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2));
                     }
                 }
-                values.add(new PieEntry(value, items.get(i)));
+                values.add(new PieEntry(valuePlus, "+ " + items.get(i).getEmotionName()));
             }
 
-            PieDataSet pieDataSet = new PieDataSet(values, "Emotions");
+            for (int i = 0; i <items.size() ; i++) {
+                float valueMinus = 0;
+                for (int j = 0; j <emotionItems.size() ; j++) {
+                    if(items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) &&
+                            Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2))<0){
+                        valueMinus = valueMinus + Float.parseFloat(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2));
+                    }
+                }
+                values.add(new PieEntry(valueMinus*(-1), "- " + items.get(i).getEmotionName()));
+            }
+
+
+            PieDataSet pieDataSet = new PieDataSet(values, null);
 
             pieDataSet.setSliceSpace(3f);
             pieDataSet.setSelectionShift(5f);
-            pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+            pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
             PieData data = new PieData(pieDataSet);
             data.setValueTextSize(10f);
-            data.setValueTextColor(Color.YELLOW);
+            data.setValueTextColor(Color.WHITE);
 
             pieChart.setData(data);
+            pieChart.invalidate();
         }
     };
 }

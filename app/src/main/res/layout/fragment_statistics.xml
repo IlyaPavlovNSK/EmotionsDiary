@@ -11,7 +11,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tv_after"
+        app:layout_constraintBottom_toTopOf="@id/text_View_Date1"
         >
 
     </com.github.mikephil.charting.charts.PieChart>
@@ -26,26 +26,26 @@
         android:text="Выберете период"
         android:textSize="30sp"/>
     <TextView
-        android:id="@+id/tv_after"
+        android:id="@+id/text_View_Date1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_before"
+        app:layout_constraintEnd_toStartOf="@id/text_View_Date2"
         app:layout_constraintBottom_toTopOf="@id/btn_data"
         android:gravity="center"
         android:textSize="30sp"
-        android:text="after"
+        android:text="date1"
         />
     <TextView
-        android:id="@+id/tv_before"
+        android:id="@+id/text_View_Date2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tv_after"
+        app:layout_constraintStart_toEndOf="@id/text_View_Date1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btn_data"
         android:gravity="center"
         android:textSize="30sp"
-        android:text="before"
+        android:text="date 2"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
