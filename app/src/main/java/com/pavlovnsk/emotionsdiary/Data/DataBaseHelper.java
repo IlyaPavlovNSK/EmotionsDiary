@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -65,7 +64,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){
             do {
                 try {
-                    if(formatForDateNow.parse(cursor.getString(3).trim()).before(date2)&&formatForDateNow.parse(cursor.getString(3).trim()).after(date1)){
+                    if(
+                            (formatForDateNow.parse(cursor.getString(3).trim()).before(date2)
+                            && formatForDateNow.parse(cursor.getString(3).trim()).after(date1))
+                                 | (cursor.getString(3).trim().compareTo(formatForDateNow.format(date1))==0)
+                    ){
 
                         EmotionItem emotionItem = new EmotionItem();
                         emotionItem.setEmotionName(cursor.getString(1));

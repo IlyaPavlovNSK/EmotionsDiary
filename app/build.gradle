@@ -28,7 +28,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //PieChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    //LayoutManager
+    implementation 'com.github.DingMouRen:LayoutManagerGroup:1e6f4f96eb'
     //заменить бы календарь
     implementation 'com.github.psinetron:slycalendarview:0.0.7'
 }
