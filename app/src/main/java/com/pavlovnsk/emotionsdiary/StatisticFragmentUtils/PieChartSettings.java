@@ -1,4 +1,4 @@
-package com.pavlovnsk.emotionsdiary.Fragments;
+package com.pavlovnsk.emotionsdiary.StatisticFragmentUtils;
 
 import android.graphics.Color;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class PieChartSettings {
 
-    protected static void pieChartPrimarySettings(PieChart pieChart){
+    public static void pieChartPrimarySettings(PieChart pieChart){
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setExtraOffsets(10, 5, 10, 20);
@@ -27,10 +27,10 @@ public class PieChartSettings {
         pieChart.setTransparentCircleRadius(55f);
         //отображет текст при пустой диаграмме
         pieChart.setNoDataText("выберите даты");
-        //pieChart.setDrawSliceText(false);
+        pieChart.setDrawSliceText(false);
     }
 
-    protected static void pieChartLegendSettings(PieChart pieChart){
+    public static void pieChartLegendSettings(PieChart pieChart){
         Legend legend = pieChart.getLegend();
         legend.setWordWrapEnabled(true);
         legend.setForm(Legend.LegendForm.CIRCLE);
@@ -39,7 +39,7 @@ public class PieChartSettings {
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
     }
 
-    protected static void pieChartSecondSettings(PieChart pieChart, ArrayList<PieEntry> values){
+    public static void pieChartSecondSettings(PieChart pieChart, ArrayList<PieEntry> values){
         PieDataSet pieDataSet = new PieDataSet(values, null);
 
         pieDataSet.setSliceSpace(3f);

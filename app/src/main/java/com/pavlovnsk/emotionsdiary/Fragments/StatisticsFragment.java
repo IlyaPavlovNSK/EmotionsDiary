@@ -1,13 +1,16 @@
 package com.pavlovnsk.emotionsdiary.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,6 +18,9 @@ import com.pavlovnsk.emotionsdiary.ArrayEmotions;
 import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.R;
+import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.DataSettings;
+import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.PieChartSettings;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,52 +69,8 @@ public class StatisticsFragment extends Fragment {
 
         @Override
         public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
-            if (firstDate != null) {
-                date1 = firstDate.getTime();
-                String f = formatForDateNow.format(date1);
-                textViewDate.setText(f);
-                if (secondDate != null) {
-                    date2 = secondDate.getTime();
-                    String s = " - " + formatForDateNow.format(date2);
-                    textViewDate.append(s);
-                }
-                else {
-                    date2 = firstDate.getTime();
-                }
-            }
-
-            ArrayList<PieEntry> values = new ArrayList<>();
-            DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext());
-            ArrayList<EmotionItem> emotionItems = dataBaseHelper.getEmotions(date1, date2);
-            ArrayList<EmotionItem> items = ArrayEmotions.createEmotions();
-
-            for (int i = 0; i <items.size() ; i++) {
-                float valuePlus = 0;
-                for (int j = 0; j <emotionItems.size() ; j++) {
-                    if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) &&
-                            Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2))>0){
-                        valuePlus = valuePlus + Float.parseFloat(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2));
-                    }
-                }
-                if(valuePlus!=0){
-                    values.add(new PieEntry(valuePlus, "+ " + items.get(i).getEmotionName()));
-                }
-            }
-
-            for (int i = 0; i <items.size() ; i++) {
-                float valueMinus = 0;
-                for (int j = 0; j <emotionItems.size() ; j++) {
-                    if(items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) &&
-                            Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2))<0){
-                        valueMinus = valueMinus + Float.parseFloat(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2));
-                    }
-                }
-                if (valueMinus != 0) {
-                    values.add(new PieEntry(valueMinus*(-1), "- " + items.get(i).getEmotionName()));
-                }
-            }
-
-            PieChartSettings.pieChartSecondSettings(pieChart, values);
+            DataSettings dataSettings = new DataSettings(getContext(), formatForDateNow, date1, date2, pieChart, textViewDate);
+            dataSettings.onDataSelected(firstDate, secondDate, hours, minutes);
         }
     };
 }
