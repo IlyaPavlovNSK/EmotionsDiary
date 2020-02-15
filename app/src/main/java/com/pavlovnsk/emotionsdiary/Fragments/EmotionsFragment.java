@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dingmouren.layoutmanagergroup.skidright.SkidRightLayoutManager;
 import com.pavlovnsk.emotionsdiary.Adapters.DaggerEmotionsFragmentComponent;
-import com.pavlovnsk.emotionsdiary.Adapters.EmotionsFragmentComponent;
 import com.pavlovnsk.emotionsdiary.Adapters.EmotionsAdapter;
+import com.pavlovnsk.emotionsdiary.Adapters.EmotionsFragmentComponent;
 import com.pavlovnsk.emotionsdiary.R;
 
 import javax.inject.Inject;
