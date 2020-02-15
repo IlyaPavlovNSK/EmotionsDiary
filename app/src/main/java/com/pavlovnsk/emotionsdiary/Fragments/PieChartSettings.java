@@ -7,6 +7,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -48,6 +49,9 @@ public class PieChartSettings {
         PieData data = new PieData(pieDataSet);
         data.setValueTextSize(10f);
         data.setValueTextColor(Color.WHITE);
+        //отображает знак %
+        data.setValueFormatter(new PercentFormatter(pieChart));
+        data.setValueTextSize(12.0f);
 
         pieChart.setData(data);
         pieChart.invalidate();

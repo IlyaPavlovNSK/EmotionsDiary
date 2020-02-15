@@ -31,6 +31,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Utils.DATABASE_NAME);
         onCreate(sqLiteDatabase);
+
     }
 
     //CRUD - create, read, update, delete
@@ -94,3 +95,5 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 }
+
+

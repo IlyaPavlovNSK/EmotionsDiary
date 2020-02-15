@@ -4,16 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
 
 import com.dingmouren.layoutmanagergroup.skidright.SkidRightLayoutManager;
 import com.pavlovnsk.emotionsdiary.Adapters.EmotionsAdapter;
@@ -35,14 +29,14 @@ public class EmotionsFragment extends Fragment {
         RecyclerView recyclerViewEmotions = view.findViewById(R.id.recycler_view_emotions);
 
         ArrayList <EmotionItem> emotionItems = ArrayEmotions.createEmotions();
+
         EmotionsAdapter emotionsAdapter = new EmotionsAdapter(new EmotionsListPresenter(emotionItems));
         SkidRightLayoutManager layoutManager = new SkidRightLayoutManager(1.5f, 0.8f);
 
         recyclerViewEmotions.setLayoutManager(layoutManager);
         recyclerViewEmotions.setAdapter(emotionsAdapter);
-        //recyclerViewEmotions.setHasFixedSize(true);
-        SnapHelper snapHelper = new PagerSnapHelper();
-        //snapHelper.attachToRecyclerView(recyclerViewEmotions);
+        recyclerViewEmotions.setHasFixedSize(true);
+
         return view;
     }
 }
