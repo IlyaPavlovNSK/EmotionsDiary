@@ -22,11 +22,10 @@ public class PieChartSettings {
         pieChart.setDrawHoleEnabled(true);
         //цвет внутреннего круга
         pieChart.setHoleColor(Color.WHITE);
-        pieChart.animateXY(3000, 3000);
+        pieChart.animateXY(700, 700);
         //диаметр прозрачного круга
         pieChart.setTransparentCircleRadius(55f);
         //отображет текст при пустой диаграмме
-        pieChart.setNoDataText("выберите даты");
         pieChart.setDrawSliceText(false);
     }
 

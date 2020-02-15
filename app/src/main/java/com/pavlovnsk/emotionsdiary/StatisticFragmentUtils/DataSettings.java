@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 public class DataSettings {
 
     private SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
@@ -21,18 +23,25 @@ public class DataSettings {
     private Date date2;
     private PieChart pieChart;
     private TextView textViewDate;
-    private Context context;
 
-    public DataSettings(Context context, SimpleDateFormat formatForDateNow, Date date1, Date date2, PieChart pieChart, TextView textViewDate) {
-        this.formatForDateNow = formatForDateNow;
-        this.date1 = date1;
-        this.date2 = date2;
+    private ArrayList<PieEntry> values = new ArrayList<>();
+    private ArrayList<EmotionItem> items;
+    private DataBaseHelper dataBaseHelper;
+
+    @Inject
+    public DataSettings(Context context, PieChart pieChart, TextView textViewDate) {
         this.pieChart = pieChart;
         this.textViewDate = textViewDate;
-        this.context = context;
+
+        dataBaseHelper = new DataBaseHelper(context);
+        items = ArrayEmotions.createEmotions();
     }
 
     public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
+
+        PieChartSettings.pieChartPrimarySettings(pieChart);
+        PieChartSettings.pieChartLegendSettings(pieChart);
+
         if (firstDate != null) {
             date1 = firstDate.getTime();
             String f = formatForDateNow.format(date1);
@@ -41,40 +50,30 @@ public class DataSettings {
                 date2 = secondDate.getTime();
                 String s = " - " + formatForDateNow.format(date2);
                 textViewDate.append(s);
-            }
-            else {
+            } else {
                 date2 = firstDate.getTime();
             }
         }
 
-        ArrayList<PieEntry> values = new ArrayList<>();
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
         ArrayList<EmotionItem> emotionItems = dataBaseHelper.getEmotions(date1, date2);
-        ArrayList<EmotionItem> items = ArrayEmotions.createEmotions();
 
-        for (int i = 0; i <items.size() ; i++) {
+        for (int i = 0; i < items.size(); i++) {
             float valuePlus = 0;
-            for (int j = 0; j <emotionItems.size() ; j++) {
-                if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) &&
-                        Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2))>0){
-                    valuePlus = valuePlus + Float.parseFloat(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2));
+            float valueMinus = 0;
+            for (int j = 0; j < emotionItems.size(); j++) {
+                int emotionLevel = Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0, emotionItems.get(j).getEmotionLevel().length() - 2));
+                if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) && emotionLevel > 0) {
+                    valuePlus = valuePlus + emotionLevel;
+                }
+                else if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) && emotionLevel < 0){
+                    valueMinus = valueMinus + emotionLevel;
                 }
             }
-            if(valuePlus!=0){
+            if (valuePlus > 0) {
                 values.add(new PieEntry(valuePlus, "+ " + items.get(i).getEmotionName()));
             }
-        }
-
-        for (int i = 0; i <items.size() ; i++) {
-            float valueMinus = 0;
-            for (int j = 0; j <emotionItems.size() ; j++) {
-                if(items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) &&
-                        Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2))<0){
-                    valueMinus = valueMinus + Float.parseFloat(emotionItems.get(j).getEmotionLevel().substring(0,emotionItems.get(j).getEmotionLevel().length()-2));
-                }
-            }
-            if (valueMinus != 0) {
-                values.add(new PieEntry(valueMinus*(-1), "- " + items.get(i).getEmotionName()));
+            if (valueMinus < 0){
+                values.add(new PieEntry(valueMinus * (-1), "- " + items.get(i).getEmotionName()));
             }
         }
 

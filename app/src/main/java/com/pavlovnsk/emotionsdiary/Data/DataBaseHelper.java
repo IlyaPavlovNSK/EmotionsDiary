@@ -13,6 +13,8 @@ import java.util.Date;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
+    private SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
+
     public DataBaseHelper(Context context) {
         super(context, Utils.DATABASE_NAME, null, Utils.DATABASE_VERSION);
     }
@@ -38,16 +40,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void addEmotion(EmotionItem item){
 
-        Date dateNow = new Date();
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-        String time =  formatForDateNow.format(dateNow);
+        String time =  formatForDateNow.format(new Date());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Utils.KEY_NAME, item.getEmotionName());
-        contentValues.put(Utils.KEY_LEVEL, item.getEmotionLevel());
-        contentValues.put(Utils.KEY_DATE, time);
+        contentValues.put(Utils.KEY_NAME, item.getEmotionName().trim());
+        contentValues.put(Utils.KEY_LEVEL, item.getEmotionLevel().trim());
+        contentValues.put(Utils.KEY_DATE, time.trim());
 
         db.insert(Utils.TABLE_NAME, null, contentValues);
         db.close();
@@ -60,17 +60,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME;
         Cursor cursor = db.rawQuery(selectEmotions, null);
 
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-
         if (cursor.moveToFirst()){
             do {
                 try {
-                    if(
-                            (formatForDateNow.parse(cursor.getString(3).trim()).before(date2)
+                    if((formatForDateNow.parse(cursor.getString(3).trim()).before(date2)
                             && formatForDateNow.parse(cursor.getString(3).trim()).after(date1))
-                                 | (cursor.getString(3).trim().compareTo(formatForDateNow.format(date1))==0)
+                                 || (cursor.getString(3).trim().compareTo(formatForDateNow.format(date1))==0)
                     ){
-
                         EmotionItem emotionItem = new EmotionItem();
                         emotionItem.setEmotionName(cursor.getString(1));
                         emotionItem.setEmotionLevel(cursor.getString(2));
