@@ -73,7 +73,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                         EmotionItem emotionItem = new EmotionItem();
                         emotionItem.setEmotionName(cursor.getString(1));
-                        emotionItem.setAemotionLevel(cursor.getString(2));
+                        emotionItem.setEmotionLevel(cursor.getString(2));
                         emotions.add(emotionItem);
                     }
                 } catch (ParseException e) {

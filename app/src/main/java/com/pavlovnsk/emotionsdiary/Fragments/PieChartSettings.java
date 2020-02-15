@@ -27,10 +27,10 @@ public class PieChartSettings {
         pieChart.setTransparentCircleRadius(55f);
         //отображет текст при пустой диаграмме
         pieChart.setNoDataText("выберите даты");
-        pieChart.setDrawSliceText(false);
+        //pieChart.setDrawSliceText(false);
     }
 
-    protected static void pieChartLegenSettings(PieChart pieChart){
+    protected static void pieChartLegendSettings(PieChart pieChart){
         Legend legend = pieChart.getLegend();
         legend.setWordWrapEnabled(true);
         legend.setForm(Legend.LegendForm.CIRCLE);

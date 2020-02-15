@@ -1,14 +1,20 @@
 package com.pavlovnsk.emotionsdiary.POJO;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+
+
 public class EmotionItem {
 
     private String emotionName;
     private String emotionLevel;
     private int emotionPic;
 
-    public EmotionItem(String emotionName, String aemotionLevel, int emotionPic) {
+
+    public EmotionItem(String emotionName, String emotionLevel, int emotionPic) {
         this.emotionName = emotionName;
-        this.emotionLevel = aemotionLevel;
+        this.emotionLevel = emotionLevel;
         this.emotionPic = emotionPic;
     }
 
@@ -16,6 +22,7 @@ public class EmotionItem {
         this.emotionName = emotionName;
         this.emotionLevel = emotionLevel;
     }
+
 
     public EmotionItem() {
     }
@@ -36,7 +43,7 @@ public class EmotionItem {
         this.emotionName = emotionName;
     }
 
-    public void setAemotionLevel(String emotionLevel) {
+    public void setEmotionLevel(String emotionLevel) {
         this.emotionLevel = emotionLevel;
     }
 

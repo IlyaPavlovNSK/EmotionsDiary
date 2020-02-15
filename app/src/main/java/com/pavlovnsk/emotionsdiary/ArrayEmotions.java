@@ -3,11 +3,16 @@ package com.pavlovnsk.emotionsdiary;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import java.util.ArrayList;
 
+import dagger.Module;
+import dagger.Provides;
+
 //Double Checked Locking & volatile singleton
+@Module
 public class ArrayEmotions {
 
     private static volatile ArrayList<EmotionItem> emotionItems;
 
+    @Provides
     public static ArrayList<EmotionItem> createEmotions(){
         ArrayList<EmotionItem> arrayEmotions = emotionItems;
         if (arrayEmotions==null){

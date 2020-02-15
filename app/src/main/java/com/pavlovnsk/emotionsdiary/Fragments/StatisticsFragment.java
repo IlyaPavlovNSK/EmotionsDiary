@@ -43,7 +43,7 @@ public class StatisticsFragment extends Fragment {
         btnData.setOnClickListener(listener);
 
         PieChartSettings.pieChartPrimarySettings(pieChart);
-        PieChartSettings.pieChartLegenSettings(pieChart);
+        PieChartSettings.pieChartLegendSettings(pieChart);
         return view;
     }
 

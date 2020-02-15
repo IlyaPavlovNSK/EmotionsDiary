@@ -4,10 +4,13 @@ import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 public class EmotionsListPresenter {
 
     private ArrayList<EmotionItem> emotions;
 
+    @Inject
     public EmotionsListPresenter(ArrayList<EmotionItem> emotions) {
         this.emotions = emotions;
     }
