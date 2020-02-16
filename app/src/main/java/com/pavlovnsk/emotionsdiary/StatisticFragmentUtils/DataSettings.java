@@ -1,12 +1,11 @@
 package com.pavlovnsk.emotionsdiary.StatisticFragmentUtils;
 
-import android.content.Context;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieEntry;
-import com.pavlovnsk.emotionsdiary.ArrayEmotions;
 import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
+import com.pavlovnsk.emotionsdiary.Data.Utils;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 
 import java.text.SimpleDateFormat;
@@ -18,26 +17,26 @@ import javax.inject.Inject;
 
 public class DataSettings {
 
-    private SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
+    private SimpleDateFormat formatForDateNow = Utils.DATEFORMAT;
     private Date date1;
     private Date date2;
     private PieChart pieChart;
     private TextView textViewDate;
 
     private ArrayList<PieEntry> values = new ArrayList<>();
+
     private ArrayList<EmotionItem> items;
     private DataBaseHelper dataBaseHelper;
 
     @Inject
-    public DataSettings(Context context, PieChart pieChart, TextView textViewDate) {
+    public DataSettings(PieChart pieChart, TextView textViewDate, ArrayList<EmotionItem> items, DataBaseHelper dataBaseHelper) {
         this.pieChart = pieChart;
         this.textViewDate = textViewDate;
-
-        dataBaseHelper = new DataBaseHelper(context);
-        items = ArrayEmotions.createEmotions();
+        this.items = items;
+        this.dataBaseHelper = dataBaseHelper;
     }
 
-    public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
+    public void onDataSelected(Calendar firstDate, Calendar secondDate) {
 
         PieChartSettings.pieChartPrimarySettings(pieChart);
         PieChartSettings.pieChartLegendSettings(pieChart);

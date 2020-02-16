@@ -12,11 +12,18 @@ import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.pavlovnsk.emotionsdiary.GlobalModule;
+import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
+import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.R;
+import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.DaggerStatisticFragmentComponent;
 import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.DataSettings;
+import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.StatisticFragmentComponent;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.inject.Inject;
 
 import ru.slybeaver.slycalendarview.SlyCalendarDialog;
 
@@ -25,9 +32,17 @@ public class StatisticsFragment extends Fragment {
     private PieChart pieChart;
     private TextView textViewDate;
 
+    @Inject
+    ArrayList<EmotionItem> emotionItems;
+    @Inject
+    DataBaseHelper dataBaseHelper;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        StatisticFragmentComponent statisticFragmentComponent = DaggerStatisticFragmentComponent.builder().globalModule(new GlobalModule(getContext())).build();
+        statisticFragmentComponent.inject(this);
 
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
@@ -57,8 +72,8 @@ public class StatisticsFragment extends Fragment {
 
         @Override
         public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
-            DataSettings dataSettings = new DataSettings(getContext(), pieChart, textViewDate);
-            dataSettings.onDataSelected(firstDate, secondDate, hours, minutes);
+            DataSettings dataSettings = new DataSettings(pieChart, textViewDate, emotionItems, dataBaseHelper);
+            dataSettings.onDataSelected(firstDate, secondDate);
         }
     };
 }

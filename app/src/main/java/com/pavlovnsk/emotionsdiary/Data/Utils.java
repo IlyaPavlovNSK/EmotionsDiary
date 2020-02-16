@@ -1,5 +1,7 @@
 package com.pavlovnsk.emotionsdiary.Data;
 
+import java.text.SimpleDateFormat;
+
 public class Utils {
 
     public static final int DATABASE_VERSION = 2;
@@ -10,4 +12,6 @@ public class Utils {
     public static final String KEY_NAME = "name";
     public static final String KEY_LEVEL = "level";
     public static final String KEY_DATE = "date";
+
+    public static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("dd.MM.yyyy");
 }

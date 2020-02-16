@@ -35,7 +35,7 @@ dependencies {
     //заменить бы календарь
     implementation 'com.github.psinetron:slycalendarview:0.0.7'
     //dagger 2
-    api 'com.google.dagger:dagger:2.26'
+    implementation 'com.google.dagger:dagger:2.26'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.26'
     //dagger 2 для андроид (потом убрать)
     api 'com.google.dagger:dagger-android:2.15'

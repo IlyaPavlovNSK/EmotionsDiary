@@ -11,10 +11,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 public class DataBaseHelper extends SQLiteOpenHelper {
 
-    private SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
+    private SimpleDateFormat formatForDateNow = Utils.DATEFORMAT;
 
+    @Inject
     public DataBaseHelper(Context context) {
         super(context, Utils.DATABASE_NAME, null, Utils.DATABASE_VERSION);
     }
