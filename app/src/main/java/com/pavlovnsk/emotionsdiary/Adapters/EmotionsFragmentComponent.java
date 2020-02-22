@@ -1,5 +1,6 @@
 package com.pavlovnsk.emotionsdiary.Adapters;
 
+import com.pavlovnsk.emotionsdiary.Fragments.AddEmotionFragment;
 import com.pavlovnsk.emotionsdiary.GlobalModule;
 import com.pavlovnsk.emotionsdiary.Fragments.EmotionsFragment;
 
@@ -11,4 +12,5 @@ import dagger.Component;
 @Singleton
 public interface EmotionsFragmentComponent {
     void inject(EmotionsFragment emotionsFragment);
+    void inject(AddEmotionFragment addEmotionFragment);
 }

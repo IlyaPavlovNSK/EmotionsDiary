@@ -1,6 +1,7 @@
 package com.pavlovnsk.emotionsdiary.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.SeekBar;
@@ -17,16 +18,17 @@ public class EmotionViewHolder extends RecyclerView.ViewHolder implements Emotio
 
     private TextView emotionLevel;
     private TextView emotionName;
+    private TextView emotionDescription;
     private ImageFilterView emotionPic;
-    private SeekBar emotionSeekBar;
     private Context context;
 
-    public EmotionViewHolder(@NonNull View itemView) {
+    EmotionViewHolder(@NonNull View itemView) {
         super(itemView);
         emotionLevel = itemView.findViewById(R.id.emotion_level);
         emotionName = itemView.findViewById(R.id.emotion_name);
         emotionPic = itemView.findViewById(R.id.emotion_pic);
-        emotionSeekBar = itemView.findViewById(R.id.emotion_seekbar);
+        SeekBar emotionSeekBar = itemView.findViewById(R.id.emotion_seekbar);
+        emotionDescription = itemView.findViewById(R.id.emotion_description);
 
         context = itemView.getContext();
 
@@ -45,8 +47,14 @@ public class EmotionViewHolder extends RecyclerView.ViewHolder implements Emotio
     }
 
     @Override
-    public void setPictureId(int id) {
-        emotionPic.setImageResource(id);
+    public void setDescription(String description) {
+        emotionDescription.setText(description);
+    }
+
+    //ЗАГРУЖЕМ ЧЕРЕЗ BITMAP
+    @Override
+    public void setPictureBitmap(Bitmap bitmap) {
+        emotionPic.setImageBitmap(bitmap);
     }
 
     @Override

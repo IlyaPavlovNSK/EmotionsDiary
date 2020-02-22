@@ -1,20 +1,18 @@
 package com.pavlovnsk.emotionsdiary.POJO;
 
-import javax.inject.Inject;
-
-import dagger.Module;
-
+import android.graphics.Bitmap;
 
 public class EmotionItem {
 
     private String emotionName;
     private String emotionLevel;
-    private int emotionPic;
+    private String description;
+    private Bitmap emotionPic;
 
-
-    public EmotionItem(String emotionName, String emotionLevel, int emotionPic) {
+    public EmotionItem(String emotionName, String emotionLevel, String description, Bitmap emotionPic) {
         this.emotionName = emotionName;
         this.emotionLevel = emotionLevel;
+        this.description = description;
         this.emotionPic = emotionPic;
     }
 
@@ -27,6 +25,14 @@ public class EmotionItem {
     public EmotionItem() {
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getEmotionName() {
         return emotionName;
     }
@@ -35,7 +41,7 @@ public class EmotionItem {
         return emotionLevel;
     }
 
-    public int getEmotionPic() {
+    public Bitmap getEmotionPic() {
         return emotionPic;
     }
 
@@ -47,7 +53,7 @@ public class EmotionItem {
         this.emotionLevel = emotionLevel;
     }
 
-    public void setEmotionPic(int emotionPic) {
+    public void setEmotionPic(Bitmap emotionPic) {
         this.emotionPic = emotionPic;
     }
 }

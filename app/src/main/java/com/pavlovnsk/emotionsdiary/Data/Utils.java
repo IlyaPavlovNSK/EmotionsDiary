@@ -4,14 +4,19 @@ import java.text.SimpleDateFormat;
 
 public class Utils {
 
-    public static final int DATABASE_VERSION = 2;
-    public static final String DATABASE_NAME = "Emotions_DB";
-    public static final String TABLE_NAME = "Your_emotions";
+    static final int DATABASE_VERSION_HISTORY = 13;
+    static final String DATABASE_NAME_HISTORY = "History_DB";
 
-    public static final String KEY_ID = "id";
-    public static final String KEY_NAME = "name";
-    public static final String KEY_LEVEL = "level";
-    public static final String KEY_DATE = "date";
+    static final String TABLE_NAME_HISTORY = "Your_emotions_history";
+    static final String TABLE_NAME_ITEM = "Your_emotions_item";
+
+    static final String KEY_ID = "id";
+    static final String KEY_NAME = "name";
+    static final String KEY_LEVEL = "level";
+    static final String KEY_DATE = "date";
+
+    static final String KEY_DESCRIPTION = "description";
+    static final String KEY_PIC = "pic";
 
     public static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("dd.MM.yyyy");
 }

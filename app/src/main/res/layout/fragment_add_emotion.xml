@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/add_emotion_pic"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_add_image"
+        app:layout_constraintBottom_toTopOf="@+id/et_emotion_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_emotion_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20sp"
+        android:gravity="start"
+        android:hint="Название эмоции"
+        android:inputType="text"
+        android:textSize="30sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@id/et_emotion_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_add_emotion"/>
+
+    <EditText
+        android:id="@+id/et_emotion_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:gravity="start"
+        android:hint="Описание эмоции"
+        android:inputType="text"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_add_emotion"/>
+
+    <Button
+        android:id="@+id/btn_add_emotion"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Добавить"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
