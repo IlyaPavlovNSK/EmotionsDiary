@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dingmouren.layoutmanagergroup.skidright.SkidRightLayoutManager;
@@ -35,8 +36,6 @@ public class EmotionsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_emotion, container, false);
         RecyclerView recyclerViewEmotions = view.findViewById(R.id.recycler_view_emotions);
-        FloatingActionButton plusEmotion = view.findViewById(R.id.btn_plus_emotion);
-        plusEmotion.setOnClickListener(plusEmotionListener);
 
         SkidRightLayoutManager layoutManager = new SkidRightLayoutManager(1.5f, 0.8f);
 
@@ -47,11 +46,5 @@ public class EmotionsFragment extends Fragment {
         return view;
     }
 
-    private FloatingActionButton.OnClickListener plusEmotionListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Fragment selectedFragment = new AddEmotionFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-        }
-    };
+
 }

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 
 public class Utils {
 
-    static final int DATABASE_VERSION_HISTORY = 13;
+    static final int DATABASE_VERSION_HISTORY = 24;
     static final String DATABASE_NAME_HISTORY = "History_DB";
 
     static final String TABLE_NAME_HISTORY = "Your_emotions_history";

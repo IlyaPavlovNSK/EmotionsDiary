@@ -4,10 +4,19 @@ import android.graphics.Bitmap;
 
 public class EmotionItem {
 
+    private int emotionId;
     private String emotionName;
     private String emotionLevel;
     private String description;
     private Bitmap emotionPic;
+
+    public EmotionItem(int emotionId, String emotionName, String emotionLevel, String description, Bitmap emotionPic) {
+        this.emotionId = emotionId;
+        this.emotionName = emotionName;
+        this.emotionLevel = emotionLevel;
+        this.description = description;
+        this.emotionPic = emotionPic;
+    }
 
     public EmotionItem(String emotionName, String emotionLevel, String description, Bitmap emotionPic) {
         this.emotionName = emotionName;
@@ -23,6 +32,14 @@ public class EmotionItem {
 
 
     public EmotionItem() {
+    }
+
+    public int getEmotionId() {
+        return emotionId;
+    }
+
+    public void setEmotionId(int id) {
+        this.emotionId = id;
     }
 
     public String getDescription() {

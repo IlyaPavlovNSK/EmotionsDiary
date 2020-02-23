@@ -18,16 +18,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.pavlovnsk.emotionsdiary.Adapters.DaggerEmotionsFragmentComponent;
+import com.pavlovnsk.emotionsdiary.Adapters.EmotionsFragmentComponent;
 import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
+import com.pavlovnsk.emotionsdiary.GlobalModule;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.R;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import javax.inject.Inject;
+
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.MODE_PRIVATE;
 
 public class AddEmotionFragment extends Fragment {
 
@@ -38,9 +41,15 @@ public class AddEmotionFragment extends Fragment {
     private Button addEmotion;
     private ImageView addPic;
 
+    @Inject
+    DataBaseHelper dataBase;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        EmotionsFragmentComponent component = DaggerEmotionsFragmentComponent.builder().globalModule(new GlobalModule(getContext())).build();
+        component.inject(this);
+
         View view = inflater.inflate(R.layout.fragment_add_emotion, container, false);
 
         addName = view.findViewById(R.id.et_emotion_name);
@@ -70,26 +79,16 @@ public class AddEmotionFragment extends Fragment {
 
     private void addEmotionInDataBase() {
         if (addName.getText().length() != 0 && addDescription.getText().length() != 0 && addPic.getDrawable() != null) {
-            Bitmap bitmap = null;
-            try {
-                FileOutputStream fOut = getActivity().openFileOutput(addPic.getDrawable().toString(), MODE_PRIVATE);
-                bitmap = ((BitmapDrawable) addPic.getDrawable()).getBitmap();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                //String imagePath = getActivity().getFilesDir() + "/" + addPic.getDrawable().toString();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            Bitmap bitmap = ((BitmapDrawable) addPic.getDrawable()).getBitmap();
+
             EmotionItem emotionItem = new EmotionItem();
             emotionItem.setEmotionName(addName.getText().toString().trim());
             emotionItem.setDescription(addDescription.getText().toString().trim());
             emotionItem.setEmotionLevel("0 %");
-
             emotionItem.setEmotionPic(bitmap);
 
-            DataBaseHelper dataBase = new DataBaseHelper(getContext());
             dataBase.addEmotionItem(emotionItem);
 
-            assert getFragmentManager() != null;
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, new EmotionsFragment()).commit();
         } else {
             Toast.makeText(getActivity(), "Заполните все поля", Toast.LENGTH_SHORT).show();
@@ -105,18 +104,16 @@ public class AddEmotionFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case PICK_IMAGE:
-                    try {
-                        final Uri fileUri = data.getData();
-                        final InputStream imageStream = getActivity().getContentResolver().openInputStream(fileUri);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        addPic.setImageBitmap(selectedImage);
-                        addPic.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        break;
-                    } catch (FileNotFoundException e) {
-                        e.getStackTrace();
-                    }
+            if (requestCode == PICK_IMAGE) {
+                try {
+                    final Uri fileUri = data.getData();
+                    final InputStream imageStream = getActivity().getContentResolver().openInputStream(fileUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    addPic.setImageBitmap(selectedImage);
+                    addPic.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                } catch (FileNotFoundException e) {
+                    e.getStackTrace();
+                }
             }
         }
     }

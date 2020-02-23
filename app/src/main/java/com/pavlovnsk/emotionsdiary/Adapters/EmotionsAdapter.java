@@ -20,7 +20,7 @@ public class EmotionsAdapter extends RecyclerView.Adapter<EmotionViewHolder> {
     @NonNull
     @Override
     public EmotionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new EmotionViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.emotion_item, parent, false));
+        return new EmotionViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.emotion_item_large, parent, false));
     }
 
     @Override
