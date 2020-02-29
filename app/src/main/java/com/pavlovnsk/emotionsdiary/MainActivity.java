@@ -1,23 +1,41 @@
 package com.pavlovnsk.emotionsdiary;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.pavlovnsk.emotionsdiary.Adapters.MenuList.MenuAdapter;
+import com.pavlovnsk.emotionsdiary.Adapters.MenuList.MenuListPresenter;
+import com.pavlovnsk.emotionsdiary.Adapters.MenuList.MenuViewHolder;
 import com.pavlovnsk.emotionsdiary.Fragments.EmotionsFragment;
-import com.pavlovnsk.emotionsdiary.Fragments.ListEmotionsItemFragment;
+import com.pavlovnsk.emotionsdiary.Fragments.EmotionsHistoryFragment;
 import com.pavlovnsk.emotionsdiary.Fragments.StatisticsFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+import javax.inject.Inject;
+
+public class MainActivity extends AppCompatActivity implements MenuViewHolder.OnItemListener {
+
+    @Inject
+    MenuListPresenter menuListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EmotionsFragmentComponent component = DaggerEmotionsFragmentComponent.builder().globalModule(new GlobalModule(this)).build();
+        component.inject(this);
+
+        MenuAdapter menuAdapter = new MenuAdapter(menuListPresenter, this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -25,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        RecyclerView menuRecyclerView = findViewById(R.id.menu_recycler_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        menuRecyclerView.setLayoutManager(layoutManager);
+        menuRecyclerView.setAdapter(menuAdapter);
+        menuRecyclerView.setHasFixedSize(true);
     }
 
     @Override
@@ -36,10 +60,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        Fragment selectedFragment = null;
         switch (id){
             case R.id.menu_add_emotions:
-                selectedFragment = new ListEmotionsItemFragment();
+                startActivity(new Intent(MainActivity.this, ListEmotionsItemActivity.class));
                 break;
             case R.id.menu_language:
                 break;
@@ -47,9 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.menu_about:
                 break;
-        }
-        if (selectedFragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -66,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new StatisticsFragment();
                     break;
                 case R.id.navigation_info:
+                    selectedFragment = new EmotionsHistoryFragment();
                     break;
                 default:
                     break;
@@ -76,4 +97,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    @Override
+    public void onItemClick(int position) {
+        switch (position){
+            case 0:
+                Intent intent = new Intent(this, AddEmotion.class);
+                startActivity(intent);
+        }
+
+    }
 }

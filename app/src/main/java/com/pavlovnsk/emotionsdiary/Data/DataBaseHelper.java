@@ -25,7 +25,8 @@ import javax.inject.Inject;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
-    private SimpleDateFormat formatForDateNow = Utils.DATEFORMAT;
+    private SimpleDateFormat fullDate = Utils.FULL_DATE;
+    private SimpleDateFormat simpleDate = Utils.SIMPLE_DATE;
     private Context context;
 
     @Inject
@@ -69,18 +70,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //CRUD - create, read, update, delete
 
-    private void addDefaultItems(SQLiteDatabase sqLiteDatabase, Context context){
+    private void addDefaultItems(SQLiteDatabase sqLiteDatabase, Context context) {
         ArrayList<EmotionItem> emotionItems = new ArrayList<>();
 
-        emotionItems.add(new EmotionItem(1,"радость", "0 %", "Я испытываю радость", BitmapFactory.decodeResource(context.getResources(),R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(2,"удивление", "0 %", "Я испытываю удивление", BitmapFactory.decodeResource(context.getResources(),R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(3,"печаль", "0 %", "Я испытываю печаль", BitmapFactory.decodeResource(context.getResources(),R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(4,"гнев", "0 %", "Я испытываю гнев", BitmapFactory.decodeResource(context.getResources(),R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(5,"отвращение", "0 %", "Я испытываю отвращение", BitmapFactory.decodeResource(context.getResources(),R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(6,"презрение", "0 %", "Я испытываю презрение", BitmapFactory.decodeResource(context.getResources(),R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(7,"страх", "0 %", "Я испытываю страх", BitmapFactory.decodeResource(context.getResources(),R.drawable.img_slide_6)));
+        emotionItems.add(new EmotionItem(1, "радость", "0 %", "Я испытываю радость", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
+        emotionItems.add(new EmotionItem(2, "удивление", "0 %", "Я испытываю удивление", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
+        emotionItems.add(new EmotionItem(3, "печаль", "0 %", "Я испытываю печаль", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
+        emotionItems.add(new EmotionItem(4, "гнев", "0 %", "Я испытываю гнев", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
+        emotionItems.add(new EmotionItem(5, "отвращение", "0 %", "Я испытываю отвращение", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
+        emotionItems.add(new EmotionItem(6, "презрение", "0 %", "Я испытываю презрение", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
+        emotionItems.add(new EmotionItem(7, "страх", "0 %", "Я испытываю страх", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
 
-        for (int i = 0; i < emotionItems.size() ; i++) {
+        for (int i = 0; i < emotionItems.size(); i++) {
             ContentValues contentValues = new ContentValues();
             EmotionItem item = emotionItems.get(i);
 
@@ -107,7 +108,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void addEmotionItem(EmotionItem item){
+    public void addEmotionItem(EmotionItem item) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -122,12 +123,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage){
+    private String saveToInternalStorage(Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
-        File mypath=new File(directory,bitmapImage.toString());
+        File mypath = new File(directory, bitmapImage.toString());
 
         FileOutputStream fos = null;
         try {
@@ -146,8 +147,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return mypath.getAbsolutePath();
     }
 
-    public void addEmotion(EmotionItem item){
-        String time =  formatForDateNow.format(new Date());
+    public void addEmotion(EmotionItem item) {
+        String time = fullDate.format(new Date());
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -159,13 +160,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<EmotionItem> getEmotionsItem(){
+    public ArrayList<EmotionItem> getEmotionsItem() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<EmotionItem> emotions = new ArrayList<>();
         String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_ITEM;
         Cursor cursor = db.rawQuery(selectEmotions, null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 EmotionItem emotionItem = new EmotionItem();
                 emotionItem.setEmotionId(cursor.getInt(0));
@@ -184,20 +185,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return emotions;
     }
 
-    public ArrayList<EmotionItem> getEmotions (Date date1, Date date2){
+    public ArrayList<EmotionItem> getEmotions(Date date1, Date date2) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<EmotionItem> emotions = new ArrayList<>();
 
         String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_HISTORY;
         Cursor cursor = db.rawQuery(selectEmotions, null);
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 try {
-                    if((formatForDateNow.parse(cursor.getString(4).trim()).before(date2)
-                            && formatForDateNow.parse(cursor.getString(4).trim()).after(date1))
-                                 || (cursor.getString(4).trim().compareTo(formatForDateNow.format(date1))==0)
-                    ){
+                    String stringDate = cursor.getString(4).substring(0, cursor.getString(4).length()-6).trim();
+                    if ((simpleDate.parse(stringDate).before(date2)
+                            && simpleDate.parse(stringDate).after(date1))
+                                || (stringDate.compareTo(simpleDate.format(date1)) == 0)
+                    ) {
                         EmotionItem emotionItem = new EmotionItem();
                         emotionItem.setEmotionName(cursor.getString(1));
                         emotionItem.setEmotionLevel(cursor.getString(2));
@@ -213,43 +215,69 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return emotions;
     }
 
-    public void deleteEmotionItem(int id){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_ITEM + " WHERE " + Utils.KEY_ID + " = ?";
-        Cursor cursor = db.rawQuery(selectEmotions, new String[] {String.valueOf(id)});
-        if(cursor.moveToFirst()){
+    public ArrayList<EmotionItem> getAllEmotions() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<EmotionItem> emotions = new ArrayList<>();
+
+        String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_HISTORY;
+        Cursor cursor = db.rawQuery(selectEmotions, null);
+
+        if (cursor.moveToFirst()) {
             do {
-                String path = cursor.getString(4);
-                File file = new File(path);
-                file.delete();
-                Log.d("delete", "File - " + file.getAbsolutePath() + " is delete");
-            }
-            while (cursor.moveToNext());
+                EmotionItem emotionItem = new EmotionItem();
+                emotionItem.setEmotionName(cursor.getString(1));
+                emotionItem.setDescription(cursor.getString(3));
+                emotionItem.setDate(cursor.getString(4));
+                emotions.add(emotionItem);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+            db.close();
+
         }
-        db.delete(Utils.TABLE_NAME_ITEM, Utils.KEY_ID + "=?",
-                new String[] {String.valueOf(id)});
-
-        db.close();
-        cursor.close();
+        return emotions;
     }
 
-    public int getEmotionCount(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        String count = "SELECT * FROM " + Utils.TABLE_NAME_HISTORY;
-        Cursor cursor = db.rawQuery(count, null);
-        db.close();
-        cursor.close();
-        return cursor.getCount();
+        public void deleteEmotionItem ( int id){
+            SQLiteDatabase db = this.getWritableDatabase();
+            String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_ITEM + " WHERE " + Utils.KEY_ID + " = ?";
+            Cursor cursor = db.rawQuery(selectEmotions, new String[]{String.valueOf(id)});
+            if (cursor.moveToFirst()) {
+                do {
+                    String path = cursor.getString(4);
+                    File file = new File(path);
+                    file.delete();
+                    Log.d("delete", "File - " + file.getAbsolutePath() + " is delete");
+                }
+                while (cursor.moveToNext());
+            }
+            db.delete(Utils.TABLE_NAME_ITEM, Utils.KEY_ID + "=?", new String[]{String.valueOf(id)});
+
+            db.close();
+            cursor.close();
+        }
+
+        public int getEmotionCount () {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String count = "SELECT * FROM " + Utils.TABLE_NAME_HISTORY;
+            Cursor cursor = db.rawQuery(count, null);
+            db.close();
+            cursor.close();
+            return cursor.getCount();
+        }
+
+        public int getEmotionItemCount () {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String count = "SELECT * FROM " + Utils.TABLE_NAME_ITEM;
+            Cursor cursor = db.rawQuery(count, null);
+            db.close();
+            cursor.close();
+            return cursor.getCount();
+        }
     }
 
-    public int getEmotionItemCount(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        String count = "SELECT * FROM " + Utils.TABLE_NAME_ITEM;
-        Cursor cursor = db.rawQuery(count, null);
-        db.close();
-        cursor.close();
-        return cursor.getCount();
-    }
-}
+
+
+
 
 

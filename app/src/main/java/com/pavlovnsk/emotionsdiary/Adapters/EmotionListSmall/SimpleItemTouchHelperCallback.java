@@ -1,4 +1,6 @@
-package com.pavlovnsk.emotionsdiary.Adapters;
+package com.pavlovnsk.emotionsdiary.Adapters.EmotionListSmall;
+
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -8,8 +10,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
 
-    public SimpleItemTouchHelperCallback(
-            ItemTouchHelperAdapter adapter) {
+    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
     }
 
@@ -28,7 +29,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+        mAdapter.onItemDismissLeft(viewHolder.getAdapterPosition());
     }
 
     @Override

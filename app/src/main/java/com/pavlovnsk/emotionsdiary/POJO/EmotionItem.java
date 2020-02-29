@@ -2,6 +2,8 @@ package com.pavlovnsk.emotionsdiary.POJO;
 
 import android.graphics.Bitmap;
 
+import javax.inject.Inject;
+
 public class EmotionItem {
 
     private int emotionId;
@@ -9,6 +11,7 @@ public class EmotionItem {
     private String emotionLevel;
     private String description;
     private Bitmap emotionPic;
+    private String date;
 
     public EmotionItem(int emotionId, String emotionName, String emotionLevel, String description, Bitmap emotionPic) {
         this.emotionId = emotionId;
@@ -18,6 +21,14 @@ public class EmotionItem {
         this.emotionPic = emotionPic;
     }
 
+
+    public EmotionItem(String emotionName, String description, String date) {
+        this.emotionName = emotionName;
+        this.description = description;
+        this.date = date;
+    }
+
+
     public EmotionItem(String emotionName, String emotionLevel, String description, Bitmap emotionPic) {
         this.emotionName = emotionName;
         this.emotionLevel = emotionLevel;
@@ -25,13 +36,21 @@ public class EmotionItem {
         this.emotionPic = emotionPic;
     }
 
+
     public EmotionItem(String emotionName, String emotionLevel) {
         this.emotionName = emotionName;
         this.emotionLevel = emotionLevel;
     }
 
-
     public EmotionItem() {
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public int getEmotionId() {

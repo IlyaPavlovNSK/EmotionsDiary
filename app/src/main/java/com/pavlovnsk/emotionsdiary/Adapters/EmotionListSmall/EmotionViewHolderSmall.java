@@ -1,4 +1,4 @@
-package com.pavlovnsk.emotionsdiary.Adapters;
+package com.pavlovnsk.emotionsdiary.Adapters.EmotionListSmall;
 
 import android.view.View;
 import android.widget.TextView;

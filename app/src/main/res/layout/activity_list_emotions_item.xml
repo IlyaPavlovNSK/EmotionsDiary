@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_emotions_item"
@@ -17,4 +19,4 @@
         android:layout_height="wrap_content"
         android:layout_margin="@android:dimen/app_icon_size"
         android:src="@drawable/ic_add"/>
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

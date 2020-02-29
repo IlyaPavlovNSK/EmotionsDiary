@@ -1,4 +1,4 @@
-package com.pavlovnsk.emotionsdiary.Adapters;
+package com.pavlovnsk.emotionsdiary.Adapters.EmotionListSmall;
 
 public interface EmotionRowViewSmall {
 

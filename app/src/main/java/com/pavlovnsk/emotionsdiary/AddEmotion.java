@@ -1,4 +1,6 @@
-package com.pavlovnsk.emotionsdiary.Fragments;
+package com.pavlovnsk.emotionsdiary;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -6,33 +8,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import com.pavlovnsk.emotionsdiary.Adapters.DaggerEmotionsFragmentComponent;
-import com.pavlovnsk.emotionsdiary.Adapters.EmotionsFragmentComponent;
 import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
-import com.pavlovnsk.emotionsdiary.GlobalModule;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
-import com.pavlovnsk.emotionsdiary.R;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import javax.inject.Inject;
 
-import static android.app.Activity.RESULT_OK;
-
-public class AddEmotionFragment extends Fragment {
+public class AddEmotion extends AppCompatActivity {
 
     private final int PICK_IMAGE = 2;
 
@@ -44,23 +33,20 @@ public class AddEmotionFragment extends Fragment {
     @Inject
     DataBaseHelper dataBase;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        EmotionsFragmentComponent component = DaggerEmotionsFragmentComponent.builder().globalModule(new GlobalModule(getContext())).build();
+    protected void onCreate(Bundle savedInstanceState) {
+        EmotionsFragmentComponent component = DaggerEmotionsFragmentComponent.builder().globalModule(new GlobalModule(this)).build();
         component.inject(this);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_emotion);
 
-        View view = inflater.inflate(R.layout.fragment_add_emotion, container, false);
-
-        addName = view.findViewById(R.id.et_emotion_name);
-        addDescription = view.findViewById(R.id.et_emotion_description);
-        addPic = view.findViewById(R.id.add_emotion_pic);
-        addEmotion = view.findViewById(R.id.btn_add_emotion);
+        addName = findViewById(R.id.et_emotion_name);
+        addDescription = findViewById(R.id.et_emotion_description);
+        addPic = findViewById(R.id.add_emotion_pic);
+        addEmotion = findViewById(R.id.btn_add_emotion);
 
         addPic.setOnClickListener(addPicListener);
         addEmotion.setOnClickListener(addEmotionListener);
-
-        return view;
     }
 
     private ImageView.OnClickListener addPicListener = new View.OnClickListener() {
@@ -89,9 +75,9 @@ public class AddEmotionFragment extends Fragment {
 
             dataBase.addEmotionItem(emotionItem);
 
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new EmotionsFragment()).commit();
+            startActivity(new Intent(AddEmotion.this, ListEmotionsItemActivity.class));
         } else {
-            Toast.makeText(getActivity(), "Заполните все поля", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -107,7 +93,7 @@ public class AddEmotionFragment extends Fragment {
             if (requestCode == PICK_IMAGE) {
                 try {
                     final Uri fileUri = data.getData();
-                    final InputStream imageStream = getActivity().getContentResolver().openInputStream(fileUri);
+                    final InputStream imageStream = getContentResolver().openInputStream(fileUri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     addPic.setImageBitmap(selectedImage);
                     addPic.setScaleType(ImageView.ScaleType.CENTER_CROP);

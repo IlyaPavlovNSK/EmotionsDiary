@@ -8,6 +8,7 @@ import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
 import com.pavlovnsk.emotionsdiary.Data.Utils;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,9 +18,9 @@ import javax.inject.Inject;
 
 public class DataSettings {
 
-    private SimpleDateFormat formatForDateNow = Utils.DATEFORMAT;
-    private Date date1;
-    private Date date2;
+    private SimpleDateFormat fullDate = Utils.FULL_DATE;
+    private SimpleDateFormat simpleDate = Utils.SIMPLE_DATE;
+
     private PieChart pieChart;
     private TextView textViewDate;
 
@@ -37,20 +38,32 @@ public class DataSettings {
     }
 
     public void onDataSelected(Calendar firstDate, Calendar secondDate) {
+        Date date1 = null;
+        Date date2 = null;
 
         PieChartSettings.pieChartPrimarySettings(pieChart);
         PieChartSettings.pieChartLegendSettings(pieChart);
 
         if (firstDate != null) {
-            date1 = firstDate.getTime();
-            String f = formatForDateNow.format(date1);
-            textViewDate.setText(f);
+            String stringFirstDay = simpleDate.format(firstDate.getTime()).trim();
+            textViewDate.setText(stringFirstDay);
+            try {
+                date1 = simpleDate.parse(stringFirstDay);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             if (secondDate != null) {
-                date2 = secondDate.getTime();
-                String s = " - " + formatForDateNow.format(date2);
-                textViewDate.append(s);
+                String stringSecondDay = simpleDate.format(secondDate.getTime()).trim();
+                textViewDate.append( " - " + stringSecondDay);
+                try {
+                    date2 = simpleDate.parse(stringSecondDay);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
             } else {
-                date2 = firstDate.getTime();
+                date2 = date1;
             }
         }
 

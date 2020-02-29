@@ -1,14 +1,17 @@
-package com.pavlovnsk.emotionsdiary.Adapters;
+package com.pavlovnsk.emotionsdiary.Adapters.EmotionListMain;
 
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class EmotionsListPresenter {
 
-    private ArrayList<EmotionItem> emotions;
+    @Inject
+    @Named("item")
+    ArrayList<EmotionItem> emotions;
 
     @Inject
     EmotionsListPresenter(ArrayList<EmotionItem> emotions) {

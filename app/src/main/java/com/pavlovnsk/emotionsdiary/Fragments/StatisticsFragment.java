@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +23,10 @@ import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.StatisticFragmentCompo
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import ru.slybeaver.slycalendarview.SlyCalendarDialog;
 
@@ -33,6 +36,7 @@ public class StatisticsFragment extends Fragment {
     private TextView textViewDate;
 
     @Inject
+    @Named("item")
     ArrayList<EmotionItem> emotionItems;
     @Inject
     DataBaseHelper dataBaseHelper;
@@ -72,6 +76,11 @@ public class StatisticsFragment extends Fragment {
 
         @Override
         public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
+            Date now = new Date();
+            if (firstDate != null && firstDate.getTime().after(now)||
+                    secondDate != null && secondDate.getTime().after(now)) {
+                Toast.makeText(getContext(), "Вы выбрали ненаступившую дату", Toast.LENGTH_SHORT).show();
+            }
             DataSettings dataSettings = new DataSettings(pieChart, textViewDate, emotionItems, dataBaseHelper);
             dataSettings.onDataSelected(firstDate, secondDate);
         }

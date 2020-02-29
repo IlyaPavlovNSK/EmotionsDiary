@@ -1,4 +1,4 @@
-package com.pavlovnsk.emotionsdiary.Adapters;
+package com.pavlovnsk.emotionsdiary.Adapters.EmotionListMain;
 
 import android.graphics.Bitmap;
 
