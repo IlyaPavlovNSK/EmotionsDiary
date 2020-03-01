@@ -18,7 +18,7 @@ public class MenuViewHolder extends RecyclerView.ViewHolder implements MenuRowVi
     private OnItemListener onItemListener;
 
     @Inject
-    public MenuViewHolder(@NonNull View itemView, OnItemListener onItemListener) {
+    MenuViewHolder(@NonNull View itemView, OnItemListener onItemListener) {
         super(itemView);
 
         title = itemView.findViewById(R.id.text_view_menu);

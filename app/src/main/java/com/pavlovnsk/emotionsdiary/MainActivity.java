@@ -16,11 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -28,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements MenuViewHolder.On
 
     @Inject
     MenuListPresenter menuListPresenter;
+
+    private static long back_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,29 +48,6 @@ public class MainActivity extends AppCompatActivity implements MenuViewHolder.On
         menuRecyclerView.setLayoutManager(layoutManager);
         menuRecyclerView.setAdapter(menuAdapter);
         menuRecyclerView.setHasFixedSize(true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.menu_add_emotions:
-                startActivity(new Intent(MainActivity.this, ListEmotionsItemActivity.class));
-                break;
-            case R.id.menu_language:
-                break;
-            case R.id.menu_share:
-                break;
-            case R.id.menu_about:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -102,9 +78,17 @@ public class MainActivity extends AppCompatActivity implements MenuViewHolder.On
     public void onItemClick(int position) {
         switch (position){
             case 0:
-                Intent intent = new Intent(this, AddEmotion.class);
+                Intent intent = new Intent(this, ListEmotionsItemActivity.class);
                 startActivity(intent);
         }
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis())
+            super.onBackPressed();
+        else
+            Toast.makeText(getBaseContext(), "Нажмите еще раз для выхода", Toast.LENGTH_SHORT).show();
+        back_pressed = System.currentTimeMillis();
     }
 }

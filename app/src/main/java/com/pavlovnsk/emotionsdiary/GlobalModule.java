@@ -56,7 +56,7 @@ public class GlobalModule {
 
     @Provides
     @Singleton
-    ArrayList<MenuItem> getMenuItems(){
+    ArrayList<MenuItem> getMenuItems() {
         ArrayList<MenuItem> itemsMenu = new ArrayList<>();
         itemsMenu.add(new MenuItem("Список эмоций", R.drawable.ic_list));
         itemsMenu.add(new MenuItem("Язык", R.drawable.ic_language));

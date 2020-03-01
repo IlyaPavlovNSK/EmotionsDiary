@@ -1,10 +1,10 @@
 package com.pavlovnsk.emotionsdiary.Adapters.EmotionListSmall;
-
-import android.content.Context;
-
+import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
@@ -28,8 +28,17 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
         mAdapter.onItemDismissLeft(viewHolder.getAdapterPosition());
+        mAdapter.removeItem();
+        Snackbar snackbar = Snackbar.make(viewHolder.itemView, "Удалено: " , Snackbar.LENGTH_SHORT);
+        snackbar.setAction("Отмена", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAdapter.returnItem(viewHolder.getAdapterPosition());
+            }
+        });
+        snackbar.show();
     }
 
     @Override

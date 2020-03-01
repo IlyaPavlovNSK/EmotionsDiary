@@ -192,14 +192,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_HISTORY;
         Cursor cursor = db.rawQuery(selectEmotions, null);
 
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst() && date1!=null && date2!=null) {
             do {
                 try {
-                    String stringDate = cursor.getString(4).substring(0, cursor.getString(4).length()-6).trim();
-                    if ((simpleDate.parse(stringDate).before(date2)
-                            && simpleDate.parse(stringDate).after(date1))
-                                || (stringDate.compareTo(simpleDate.format(date1)) == 0)
-                    ) {
+                    String stringDate = cursor.getString(4).substring(0, 10).trim();
+                    if ((simpleDate.parse(stringDate).before(date2) || stringDate.compareTo(simpleDate.format(date2)) == 0)
+                            && (simpleDate.parse(stringDate).after(date1) || stringDate.compareTo(simpleDate.format(date1)) == 0)) {
                         EmotionItem emotionItem = new EmotionItem();
                         emotionItem.setEmotionName(cursor.getString(1));
                         emotionItem.setEmotionLevel(cursor.getString(2));
@@ -238,43 +236,43 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return emotions;
     }
 
-        public void deleteEmotionItem ( int id){
-            SQLiteDatabase db = this.getWritableDatabase();
-            String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_ITEM + " WHERE " + Utils.KEY_ID + " = ?";
-            Cursor cursor = db.rawQuery(selectEmotions, new String[]{String.valueOf(id)});
-            if (cursor.moveToFirst()) {
-                do {
-                    String path = cursor.getString(4);
-                    File file = new File(path);
-                    file.delete();
-                    Log.d("delete", "File - " + file.getAbsolutePath() + " is delete");
-                }
-                while (cursor.moveToNext());
+    public void deleteEmotionItem(EmotionItem item) {
+        int id = item.getEmotionId();
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_ITEM + " WHERE " + Utils.KEY_ID + " = ?";
+        Cursor cursor = db.rawQuery(selectEmotions, new String[]{String.valueOf(id)});
+        if (cursor.moveToFirst()) {
+            do {
+                String path = cursor.getString(4);
+                File file = new File(path);
+                file.delete();
+                Log.d("myLog", "File - " + file.getAbsolutePath() + " is delete");
+                db.delete(Utils.TABLE_NAME_ITEM, Utils.KEY_ID + "=?", new String[]{String.valueOf(id)});
             }
-            db.delete(Utils.TABLE_NAME_ITEM, Utils.KEY_ID + "=?", new String[]{String.valueOf(id)});
-
-            db.close();
-            cursor.close();
+            while (cursor.moveToNext());
         }
-
-        public int getEmotionCount () {
-            SQLiteDatabase db = this.getReadableDatabase();
-            String count = "SELECT * FROM " + Utils.TABLE_NAME_HISTORY;
-            Cursor cursor = db.rawQuery(count, null);
-            db.close();
-            cursor.close();
-            return cursor.getCount();
-        }
-
-        public int getEmotionItemCount () {
-            SQLiteDatabase db = this.getReadableDatabase();
-            String count = "SELECT * FROM " + Utils.TABLE_NAME_ITEM;
-            Cursor cursor = db.rawQuery(count, null);
-            db.close();
-            cursor.close();
-            return cursor.getCount();
-        }
+        db.close();
+        cursor.close();
     }
+
+    public int getEmotionCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String count = "SELECT * FROM " + Utils.TABLE_NAME_HISTORY;
+        Cursor cursor = db.rawQuery(count, null);
+        db.close();
+        cursor.close();
+        return cursor.getCount();
+    }
+
+    public int getEmotionItemCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String count = "SELECT * FROM " + Utils.TABLE_NAME_ITEM;
+        Cursor cursor = db.rawQuery(count, null);
+        db.close();
+        cursor.close();
+        return cursor.getCount();
+    }
+}
 
 
 
