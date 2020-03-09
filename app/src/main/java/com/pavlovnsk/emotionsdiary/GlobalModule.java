@@ -1,13 +1,27 @@
 package com.pavlovnsk.emotionsdiary;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import androidx.annotation.NonNull;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import com.pavlovnsk.emotionsdiary.Data.AppDataBase;
 import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
+import com.pavlovnsk.emotionsdiary.Data.EmotionForItemDao;
+import com.pavlovnsk.emotionsdiary.Data.Utils;
+import com.pavlovnsk.emotionsdiary.POJO.EmotionForItem;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.POJO.MenuItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.concurrent.Executors;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -64,6 +78,27 @@ public class GlobalModule {
         itemsMenu.add(new MenuItem("О программе", R.drawable.ic_about));
 
         return itemsMenu;
+    }
+
+    @Provides
+    @Singleton
+    AppDataBase getAppDatabase(final Context context){
+        final ArrayList<EmotionForItem> items = Utils.getEmotionForItem(context);
+
+        RoomDatabase.Callback callback = new RoomDatabase.Callback() {
+            @Override
+            public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                super.onCreate(db);
+                Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        getAppDatabase(context).emotionForItemDao().addDefaultEmotionItem(items);
+                    }
+                });
+            }
+        };
+        AppDataBase db =  Room.databaseBuilder(context, AppDataBase.class, "AppDataBase").addCallback(callback).build();
+        return db;
     }
 }
 

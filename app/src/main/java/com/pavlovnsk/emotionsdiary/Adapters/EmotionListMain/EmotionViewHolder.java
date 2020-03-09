@@ -72,6 +72,7 @@ public class EmotionViewHolder extends RecyclerView.ViewHolder implements Emotio
         Bundle args = new Bundle();
         args.putString("name", emotionName.getText().toString());
         args.putString("level", emotionLevel.getText().toString());
+        args.putString("description", emotionDescription.getText().toString());
 
         EmotionDialog emotionDialog = new EmotionDialog();
         emotionDialog.setArguments(args);

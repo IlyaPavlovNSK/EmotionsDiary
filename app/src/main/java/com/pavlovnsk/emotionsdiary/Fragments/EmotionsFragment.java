@@ -1,7 +1,7 @@
 package com.pavlovnsk.emotionsdiary.Fragments;
 
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +36,18 @@ public class EmotionsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_emotion, container, false);
         RecyclerView recyclerViewEmotions = view.findViewById(R.id.recycler_view_emotions);
 
-        SkidRightLayoutManager layoutManager = new SkidRightLayoutManager(1.5f, 0.8f);
+        SkidRightLayoutManager layoutManager = new SkidRightLayoutManager(getItemHeightWidthRatio(), 0.8f);
 
         recyclerViewEmotions.setLayoutManager(layoutManager);
         recyclerViewEmotions.setAdapter(emotionsAdapter);
         recyclerViewEmotions.setHasFixedSize(true);
 
         return view;
+    }
+
+    private float getItemHeightWidthRatio(){
+        int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int height = Resources.getSystem().getDisplayMetrics().heightPixels;
+        return (float) height/width;
     }
 }

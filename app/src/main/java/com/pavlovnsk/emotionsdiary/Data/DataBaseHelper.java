@@ -2,20 +2,16 @@ package com.pavlovnsk.emotionsdiary.Data;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.R;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +46,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + Utils.KEY_NAME + " TEXT,"
                 + Utils.KEY_LEVEL + " TEXT,"
                 + Utils.KEY_DESCRIPTION + " TEXT,"
+                + Utils.KEY_DATE + " TEXT,"
                 + Utils.KEY_PIC + " TEXT" + ")";
 
         sqLiteDatabase.execSQL(CREATE_HISTORY_TABLE);
@@ -60,8 +57,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //удаление всех файлов из InternalStorage
-        clearMyFiles(sqLiteDatabase);
+//        //удаление всех файлов из InternalStorage
+//        clearMyFiles(sqLiteDatabase);
 
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Utils.DATABASE_NAME_HISTORY);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Utils.TABLE_NAME_ITEM);
@@ -72,14 +69,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private void addDefaultItems(SQLiteDatabase sqLiteDatabase, Context context) {
         ArrayList<EmotionItem> emotionItems = new ArrayList<>();
-
-        emotionItems.add(new EmotionItem(1, "радость", "0 %", "Я испытываю радость", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(2, "удивление", "0 %", "Я испытываю удивление", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(3, "печаль", "0 %", "Я испытываю печаль", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(4, "гнев", "0 %", "Я испытываю гнев", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(5, "отвращение", "0 %", "Я испытываю отвращение", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(6, "презрение", "0 %", "Я испытываю презрение", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
-        emotionItems.add(new EmotionItem(7, "страх", "0 %", "Я испытываю страх", BitmapFactory.decodeResource(context.getResources(), R.drawable.img_slide_6)));
+        String date = "";
+        emotionItems.add(new EmotionItem("радость", "0 %", "Я испытываю радость", Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.happy), date));
+        emotionItems.add(new EmotionItem("удивление", "0 %", "Я испытываю удивление", Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.surprise), date));
+        emotionItems.add(new EmotionItem("печаль", "0 %", "Я испытываю печаль", Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.sadness), date));
+        emotionItems.add(new EmotionItem("гнев", "0 %", "Я испытываю гнев", Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.anger), date));
+        emotionItems.add(new EmotionItem("отвращение", "0 %", "Я испытываю отвращение", Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.disgust), date));
+        emotionItems.add(new EmotionItem("презрение", "0 %", "Я испытываю презрение", Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.contempt), date));
+        emotionItems.add(new EmotionItem("страх", "0 %", "Я испытываю страх", Utils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.fear), date));
 
         for (int i = 0; i < emotionItems.size(); i++) {
             ContentValues contentValues = new ContentValues();
@@ -88,25 +85,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             contentValues.put(Utils.KEY_NAME, item.getEmotionName().trim());
             contentValues.put(Utils.KEY_LEVEL, item.getEmotionLevel().trim());
             contentValues.put(Utils.KEY_DESCRIPTION, item.getDescription().trim());
+            contentValues.put(Utils.KEY_DATE, item.getDate().trim());
 
-            String path = saveToInternalStorage(item.getEmotionPic());
+            String path = Utils.saveToInternalStorage(item.getEmotionPic(), context);
             contentValues.put(Utils.KEY_PIC, path);
 
             sqLiteDatabase.insertOrThrow(Utils.TABLE_NAME_ITEM, null, contentValues);
         }
+        emotionItems.clear();
     }
 
-    //удаление всех файлов из InternalStorage
-    private void clearMyFiles(SQLiteDatabase sqLiteDatabase) {
-        String selectAllItems = "SELECT * FROM " + Utils.TABLE_NAME_ITEM;
-        Cursor cursor = sqLiteDatabase.rawQuery(selectAllItems, null);
-        if (cursor.moveToFirst()) {
-            do {
-                File file = new File(cursor.getString(4));
-                file.delete();
-            } while (cursor.moveToNext());
-        }
-    }
+//    //удаление всех файлов из InternalStorage
+//    private void clearMyFiles(SQLiteDatabase sqLiteDatabase) {
+//        String selectAllItems = "SELECT * FROM " + Utils.TABLE_NAME_ITEM;
+//        Cursor cursor = sqLiteDatabase.rawQuery(selectAllItems, null);
+//        if (cursor.moveToFirst()) {
+//            do {
+//                File file = new File(cursor.getString(5));
+//                file.delete();
+//            } while (cursor.moveToNext());
+//        }
+//    }
 
     public void addEmotionItem(EmotionItem item) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -116,45 +115,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put(Utils.KEY_LEVEL, item.getEmotionLevel().trim());
         contentValues.put(Utils.KEY_DESCRIPTION, item.getDescription().trim());
 
-        String path = saveToInternalStorage(item.getEmotionPic());
+        String path = Utils.saveToInternalStorage(item.getEmotionPic(), context);
         contentValues.put(Utils.KEY_PIC, path);
 
         db.insert(Utils.TABLE_NAME_ITEM, null, contentValues);
         db.close();
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage) {
-        ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath = new File(directory, bitmapImage.toString());
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return mypath.getAbsolutePath();
-    }
-
     public void addEmotion(EmotionItem item) {
-        String time = fullDate.format(new Date());
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(Utils.KEY_NAME, item.getEmotionName().trim());
         contentValues.put(Utils.KEY_LEVEL, item.getEmotionLevel().trim());
-        contentValues.put(Utils.KEY_DATE, time.trim());
+        contentValues.put(Utils.KEY_DESCRIPTION, item.getDescription().trim());
+        contentValues.put(Utils.KEY_DATE, item.getDate().trim());
 
         db.insert(Utils.TABLE_NAME_HISTORY, null, contentValues);
         db.close();
@@ -173,8 +149,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 emotionItem.setEmotionName(cursor.getString(1));
                 emotionItem.setEmotionLevel(cursor.getString(2));
                 emotionItem.setDescription(cursor.getString(3));
+                emotionItem.setDate(cursor.getString(4));
                 //путь к bitmap
-                Bitmap bitmap = BitmapFactory.decodeFile(cursor.getString(4));
+                Bitmap bitmap = Utils.decodeSampledBitmapFromBd(cursor.getString(5));
                 emotionItem.setEmotionPic(bitmap);
 
                 emotions.add(emotionItem);
@@ -192,7 +169,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String selectEmotions = "SELECT * FROM " + Utils.TABLE_NAME_HISTORY;
         Cursor cursor = db.rawQuery(selectEmotions, null);
 
-        if (cursor.moveToFirst() && date1!=null && date2!=null) {
+        if (cursor.moveToFirst() && date1 != null && date2 != null) {
             do {
                 try {
                     String stringDate = cursor.getString(4).substring(0, 10).trim();
@@ -243,7 +220,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectEmotions, new String[]{String.valueOf(id)});
         if (cursor.moveToFirst()) {
             do {
-                String path = cursor.getString(4);
+                String path = cursor.getString(5);
                 File file = new File(path);
                 file.delete();
                 Log.d("myLog", "File - " + file.getAbsolutePath() + " is delete");

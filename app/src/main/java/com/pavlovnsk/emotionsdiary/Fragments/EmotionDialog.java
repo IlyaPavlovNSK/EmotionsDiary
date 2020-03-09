@@ -9,15 +9,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
+import com.pavlovnsk.emotionsdiary.Data.Utils;
 import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class EmotionDialog extends DialogFragment {
+    private SimpleDateFormat fullDate = Utils.FULL_DATE;
 
     public Dialog onCreateEmotionDialog(Bundle onSaveInstanceSave, final Context context){
 
         final String name = getArguments().getString("name");
         final String level = getArguments().getString("level");
+        final String description = getArguments().getString("description");
 
         if (context!= null){
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -29,7 +35,8 @@ public class EmotionDialog extends DialogFragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             DataBaseHelper dataBase = new DataBaseHelper(context);
-                            dataBase.addEmotion(new EmotionItem(name, level));
+                            String time = fullDate.format(new Date());
+                            dataBase.addEmotion(new EmotionItem(name, level, description, null, time ));
                         }
                     })
                     .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
