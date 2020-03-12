@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pavlovnsk.emotionsdiary.Data.Utils;
 import com.pavlovnsk.emotionsdiary.Fragments.EmotionDialog;
 import com.pavlovnsk.emotionsdiary.R;
 
@@ -53,7 +54,8 @@ public class EmotionViewHolder extends RecyclerView.ViewHolder implements Emotio
 
     //ЗАГРУЖЕМ ЧЕРЕЗ BITMAP
     @Override
-    public void setPictureBitmap(Bitmap bitmap) {
+    public void setPictureBitmap(String bitmapString) {
+        Bitmap bitmap = Utils.decodeSampledBitmapFromBd(bitmapString);
         emotionPic.setImageBitmap(bitmap);
     }
 

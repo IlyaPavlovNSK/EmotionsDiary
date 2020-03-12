@@ -15,7 +15,7 @@ public class EmotionHistoryViewHolder extends RecyclerView.ViewHolder implements
     private TextView emotionDate;
     private TextView emotionTime;
 
-    public EmotionHistoryViewHolder(@NonNull View itemView) {
+    EmotionHistoryViewHolder(@NonNull View itemView) {
         super(itemView);
         emotionDate = itemView.findViewById(R.id.emotion_date_history);
         emotionTime = itemView.findViewById(R.id.emotion_time_history);

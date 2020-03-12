@@ -12,9 +12,9 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
-public class PieChartSettings {
+class PieChartSettings {
 
-    public static void pieChartPrimarySettings(PieChart pieChart){
+    static void pieChartPrimarySettings(PieChart pieChart){
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setExtraOffsets(10, 5, 10, 20);
@@ -29,7 +29,7 @@ public class PieChartSettings {
         pieChart.setDrawSliceText(false);
     }
 
-    public static void pieChartLegendSettings(PieChart pieChart){
+    static void pieChartLegendSettings(PieChart pieChart){
         Legend legend = pieChart.getLegend();
         legend.setWordWrapEnabled(true);
         legend.setForm(Legend.LegendForm.CIRCLE);
@@ -38,7 +38,7 @@ public class PieChartSettings {
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
     }
 
-    public static void pieChartSecondSettings(PieChart pieChart, ArrayList<PieEntry> values){
+    static void pieChartSecondSettings(PieChart pieChart, ArrayList<PieEntry> values){
         PieDataSet pieDataSet = new PieDataSet(values, null);
 
         pieDataSet.setSliceSpace(3f);
@@ -55,7 +55,4 @@ public class PieChartSettings {
         pieChart.setData(data);
         pieChart.invalidate();
     }
-
-
-
 }

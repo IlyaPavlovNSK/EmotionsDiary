@@ -14,7 +14,7 @@ public class EmotionViewHolderSmall extends RecyclerView.ViewHolder implements E
     private TextView description;
 
     @Inject
-    public EmotionViewHolderSmall(@NonNull View itemView) {
+    EmotionViewHolderSmall(@NonNull View itemView) {
         super(itemView);
         name = itemView.findViewById(R.id.text_view_emotion_item_name_small);
         description = itemView.findViewById(R.id.text_view_emotion_item_description_small);

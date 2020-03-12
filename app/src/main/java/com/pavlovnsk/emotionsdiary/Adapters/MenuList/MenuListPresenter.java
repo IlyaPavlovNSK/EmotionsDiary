@@ -11,7 +11,7 @@ public class MenuListPresenter{
     ArrayList<MenuItem> itemsMenu;
 
     @Inject
-    public MenuListPresenter(ArrayList<MenuItem> items) {
+    MenuListPresenter(ArrayList<MenuItem> items) {
         this.itemsMenu = items;
     }
 

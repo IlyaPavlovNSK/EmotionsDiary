@@ -1,4 +1,4 @@
-package com.pavlovnsk.emotionsdiary.POJO;
+package com.pavlovnsk.emotionsdiary.Room;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class EmotionForHistory {
 
-    @PrimaryKey
+    @PrimaryKey (autoGenerate  =  true)
     private int emotionId;
     private String emotionName;
     private String emotionLevel;

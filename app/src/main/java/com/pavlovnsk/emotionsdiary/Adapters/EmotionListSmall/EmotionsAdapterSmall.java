@@ -5,26 +5,27 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
-import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
+import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
+import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 import com.pavlovnsk.emotionsdiary.R;
-import java.util.ArrayList;
+
 import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class EmotionsAdapterSmall extends RecyclerView.Adapter<EmotionViewHolderSmall> implements ItemTouchHelperAdapter {
 
     private EmotionsListPresenterSmall presenterSmall;
-    private ArrayList<EmotionItem> emotions;
-    private EmotionItem deletedItem;
+    private List<EmotionForItem> emotions;
+    private EmotionForItem deletedItem;
     private int keyPosition;
 
     @Inject
-    DataBaseHelper db;
+    AppDataBase6 db;
 
     @Inject
-    public EmotionsAdapterSmall(EmotionsListPresenterSmall emotionsListPresenterSmall) {
+    EmotionsAdapterSmall(EmotionsListPresenterSmall emotionsListPresenterSmall) {
         this.presenterSmall = emotionsListPresenterSmall;
         this.emotions = emotionsListPresenterSmall.getEmotions();
     }
@@ -73,13 +74,13 @@ public class EmotionsAdapterSmall extends RecyclerView.Adapter<EmotionViewHolder
 
     @Override
     public void returnItem(int position){
-        db.addEmotionItem(deletedItem);
+        db.emotionForItemDao().addEmotionItem(deletedItem);
         emotions.add(keyPosition, deletedItem);
         notifyDataSetChanged();
     }
 
     @Override
     public void removeItem() {
-        db.deleteEmotionItem(deletedItem);
+        db.emotionForItemDao().deleteEmotionItem(deletedItem);
     }
 }

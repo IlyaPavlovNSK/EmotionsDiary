@@ -2,6 +2,7 @@ package com.pavlovnsk.emotionsdiary;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,11 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
-import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
+
+import com.pavlovnsk.emotionsdiary.Data.Utils;
+import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
+import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -27,11 +31,10 @@ public class AddEmotion extends AppCompatActivity {
 
     private EditText addName;
     private EditText addDescription;
-    private Button addEmotion;
     private ImageView addPic;
 
-    @Inject
-    DataBaseHelper dataBase;
+    @Inject AppDataBase6 db;
+    @Inject Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class AddEmotion extends AppCompatActivity {
         addName = findViewById(R.id.et_emotion_name);
         addDescription = findViewById(R.id.et_emotion_description);
         addPic = findViewById(R.id.add_emotion_pic);
-        addEmotion = findViewById(R.id.btn_add_emotion);
+        Button addEmotion = findViewById(R.id.btn_add_emotion);
 
         addPic.setOnClickListener(addPicListener);
         addEmotion.setOnClickListener(addEmotionListener);
@@ -65,16 +68,10 @@ public class AddEmotion extends AppCompatActivity {
 
     private void addEmotionInDataBase() {
         if (addName.getText().length() != 0 && addDescription.getText().length() != 0 && addPic.getDrawable() != null) {
-            Bitmap bitmap = ((BitmapDrawable) addPic.getDrawable()).getBitmap();
 
-            EmotionItem emotionItem = new EmotionItem();
-            emotionItem.setEmotionName(addName.getText().toString().trim());
-            emotionItem.setDescription(addDescription.getText().toString().trim());
-            emotionItem.setEmotionLevel("0 %");
-            emotionItem.setEmotionPic(bitmap);
-
-            dataBase.addEmotionItem(emotionItem);
-
+            final String bitmapAdress = Utils.saveToInternalStorage(((BitmapDrawable) addPic.getDrawable()).getBitmap(), context);
+            final long date = new Date().getTime();
+            db.emotionForItemDao().addEmotionItem(new EmotionForItem(addName.getText().toString(), "0 %", addDescription.getText().toString(), date, bitmapAdress));
             startActivity(new Intent(AddEmotion.this, ListEmotionsItemActivity.class));
         } else {
             Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();

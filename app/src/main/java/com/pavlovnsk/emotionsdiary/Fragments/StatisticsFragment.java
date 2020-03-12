@@ -13,20 +13,19 @@ import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
 import com.pavlovnsk.emotionsdiary.GlobalModule;
-import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
-import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
+import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 import com.pavlovnsk.emotionsdiary.R;
 import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.DaggerStatisticFragmentComponent;
 import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.DataSettings;
 import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.StatisticFragmentComponent;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import ru.slybeaver.slycalendarview.SlyCalendarDialog;
 
@@ -34,22 +33,17 @@ public class StatisticsFragment extends Fragment {
 
     private PieChart pieChart;
     private TextView textViewDate;
-
-    @Inject
-    @Named("item")
-    ArrayList<EmotionItem> emotionItems;
-    @Inject
-    DataBaseHelper dataBaseHelper;
+    @Inject AppDataBase6 db;
+    private List<EmotionForItem> emotionItems;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         StatisticFragmentComponent statisticFragmentComponent = DaggerStatisticFragmentComponent.builder().globalModule(new GlobalModule(getContext())).build();
         statisticFragmentComponent.inject(this);
-
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
+        emotionItems = db.emotionForItemDao().getEmotionsItem();
         pieChart = view.findViewById(R.id.pie_chart);
         FloatingActionButton btnData = view.findViewById(R.id.btn_data);
         textViewDate = view.findViewById(R.id.text_View_Date);
@@ -59,7 +53,6 @@ public class StatisticsFragment extends Fragment {
         pieChart.setNoDataText("выберите даты");
         return view;
     }
-
 
     private FloatingActionButton.OnClickListener listener = new FloatingActionButton.OnClickListener() {
         @Override
@@ -81,7 +74,7 @@ public class StatisticsFragment extends Fragment {
                     secondDate != null && secondDate.getTime().after(now)) {
                 Toast.makeText(getContext(), "Вы выбрали ненаступившую дату", Toast.LENGTH_SHORT).show();
             }
-            DataSettings dataSettings = new DataSettings(pieChart, textViewDate, emotionItems, dataBaseHelper);
+            DataSettings dataSettings = new DataSettings(pieChart, textViewDate, emotionItems, db);
             dataSettings.onDataSelected(firstDate, secondDate);
         }
     };

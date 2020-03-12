@@ -1,29 +1,19 @@
 package com.pavlovnsk.emotionsdiary;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.pavlovnsk.emotionsdiary.Data.AppDataBase;
-import com.pavlovnsk.emotionsdiary.Data.DataBaseHelper;
-import com.pavlovnsk.emotionsdiary.Data.EmotionForItemDao;
+import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
+
 import com.pavlovnsk.emotionsdiary.Data.Utils;
-import com.pavlovnsk.emotionsdiary.POJO.EmotionForItem;
-import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
 import com.pavlovnsk.emotionsdiary.POJO.MenuItem;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.concurrent.Executors;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -46,30 +36,6 @@ public class GlobalModule {
 
     @Provides
     @Singleton
-    ArrayList<EmotionItem> getArray() {
-        return new ArrayList<EmotionItem>();
-    }
-
-    @Provides
-    @Singleton
-    @Named("item")
-    ArrayList<EmotionItem> createEmotions() {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
-        return dataBaseHelper.getEmotionsItem();
-    }
-
-    @Provides
-    @Singleton
-    @Named("all")
-    ArrayList<EmotionItem> getAllEmotions() {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
-        ArrayList<EmotionItem> arrayList = dataBaseHelper.getAllEmotions();
-        Collections.reverse(arrayList);
-        return arrayList;
-    }
-
-    @Provides
-    @Singleton
     ArrayList<MenuItem> getMenuItems() {
         ArrayList<MenuItem> itemsMenu = new ArrayList<>();
         itemsMenu.add(new MenuItem("Список эмоций", R.drawable.ic_list));
@@ -82,22 +48,14 @@ public class GlobalModule {
 
     @Provides
     @Singleton
-    AppDataBase getAppDatabase(final Context context){
-        final ArrayList<EmotionForItem> items = Utils.getEmotionForItem(context);
-
+    AppDataBase6 getAppDatabase() {
         RoomDatabase.Callback callback = new RoomDatabase.Callback() {
-            @Override
-            public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                super.onCreate(db);
-                Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        getAppDatabase(context).emotionForItemDao().addDefaultEmotionItem(items);
-                    }
-                });
+            public void onCreate(SupportSQLiteDatabase db) {
+                Utils.createDB(db, context);
             }
         };
-        AppDataBase db =  Room.databaseBuilder(context, AppDataBase.class, "AppDataBase").addCallback(callback).build();
+        AppDataBase6 db = Room.databaseBuilder(context, AppDataBase6.class, "AppDataBase6").fallbackToDestructiveMigration().allowMainThreadQueries().addCallback(callback).build();
+        db.query("select 1", null);
         return db;
     }
 }

@@ -30,7 +30,7 @@ public class EmotionsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        EmotionsFragmentComponent component = DaggerEmotionsFragmentComponent.builder().globalModule(new GlobalModule(getContext())).build();
+        EmotionsFragmentComponent component = DaggerEmotionsFragmentComponent.builder().globalModule(new GlobalModule(requireContext())).build();
         component.inject(this);
 
         View view = inflater.inflate(R.layout.fragment_emotion, container, false);
@@ -45,9 +45,9 @@ public class EmotionsFragment extends Fragment {
         return view;
     }
 
-    private float getItemHeightWidthRatio(){
+    private float getItemHeightWidthRatio() {
         int width = Resources.getSystem().getDisplayMetrics().widthPixels;
         int height = Resources.getSystem().getDisplayMetrics().heightPixels;
-        return (float) height/width;
+        return (float) height / width;
     }
 }

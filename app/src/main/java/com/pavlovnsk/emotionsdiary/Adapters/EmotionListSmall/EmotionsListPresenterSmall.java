@@ -1,23 +1,23 @@
 package com.pavlovnsk.emotionsdiary.Adapters.EmotionListSmall;
 
-import com.pavlovnsk.emotionsdiary.POJO.EmotionItem;
-import java.util.ArrayList;
+import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
+import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
+
+import java.util.List;
+
 import javax.inject.Inject;
-import javax.inject.Named;
 
-public class EmotionsListPresenterSmall{
+public class EmotionsListPresenterSmall {
 
-    @Inject
-    @Named("item")
-    ArrayList<EmotionItem> emotions;
+    private List<EmotionForItem> emotions;
 
     @Inject
-    public EmotionsListPresenterSmall(ArrayList<EmotionItem> emotions) {
-        this.emotions = emotions;
+    public EmotionsListPresenterSmall(AppDataBase6 db) {
+        emotions = db.emotionForItemDao().getEmotionsItem();
     }
 
     void onBindEmotionsRowViewAtPosition(int position, EmotionRowViewSmall rowViewSmall) {
-        EmotionItem emotionItem = emotions.get(position);
+        EmotionForItem emotionItem = emotions.get(position);
         rowViewSmall.setEmotionId(emotionItem.getEmotionId());
         rowViewSmall.setEmotionName(emotionItem.getEmotionName());
         rowViewSmall.setDescription(emotionItem.getDescription());
@@ -27,7 +27,7 @@ public class EmotionsListPresenterSmall{
         return emotions.size();
     }
 
-    public ArrayList<EmotionItem> getEmotions() {
+    List<EmotionForItem> getEmotions() {
         return emotions;
     }
 }

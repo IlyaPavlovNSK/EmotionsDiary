@@ -1,5 +1,4 @@
 package com.pavlovnsk.emotionsdiary.Adapters.EmotionListMain;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -13,7 +12,7 @@ public class EmotionsAdapter extends RecyclerView.Adapter<EmotionViewHolder> {
     private EmotionsListPresenter presenter;
 
     @Inject
-    EmotionsAdapter(EmotionsListPresenter presenter) {
+    public EmotionsAdapter(EmotionsListPresenter presenter) {
         this.presenter = presenter;
     }
 

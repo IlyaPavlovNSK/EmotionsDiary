@@ -25,7 +25,6 @@ public class ListEmotionsItemActivity extends AppCompatActivity {
     RecyclerView recyclerViewEmotions;
     CoordinatorLayout coordinatorLayout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
