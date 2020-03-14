@@ -9,12 +9,10 @@ import com.pavlovnsk.emotionsdiary.Data.Utils;
 import com.pavlovnsk.emotionsdiary.Room.EmotionForHistory;
 import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -36,37 +34,20 @@ public class DataSettings {
         this.db = db;
     }
 
-    public void onDataSelected(Calendar firstDate, Calendar secondDate) {
-        Date date1 = null;
-        Date date2 = null;
+    public void onDataSelected(long firstDate, long secondDate) {
 
         PieChartSettings.pieChartPrimarySettings(pieChart);
         PieChartSettings.pieChartLegendSettings(pieChart);
 
-        if (firstDate != null) {
-            String stringFirstDay = simpleDate.format(firstDate.getTime()).trim();
-            textViewDate.setText(stringFirstDay);
-            try {
-                date1 = simpleDate.parse(stringFirstDay);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        String stringFirstDay = simpleDate.format(firstDate);
+        textViewDate.setText(stringFirstDay);
 
-            if (secondDate != null) {
-                String stringSecondDay = simpleDate.format(secondDate.getTime()).trim();
-                textViewDate.append( " - " + stringSecondDay);
-                try {
-                    date2 = simpleDate.parse(stringSecondDay);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-            } else {
-                date2 = date1;
-            }
+        if (secondDate != firstDate) {
+            String stringSecondDay = simpleDate.format(secondDate);
+            textViewDate.append(" - " + stringSecondDay);
         }
 
-        List<EmotionForHistory> emotionItems = db.emotionForHistoryDao().getEmotions(date1.getTime(), date2.getTime());
+        List<EmotionForHistory> emotionItems = db.emotionForHistoryDao().getEmotions(firstDate, secondDate + TimeUnit.DAYS.toMillis(1));
 
         for (int i = 0; i < items.size(); i++) {
             float valuePlus = 0;
@@ -75,15 +56,14 @@ public class DataSettings {
                 int emotionLevel = Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0, emotionItems.get(j).getEmotionLevel().length() - 2));
                 if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) && emotionLevel > 0) {
                     valuePlus = valuePlus + emotionLevel;
-                }
-                else if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) && emotionLevel < 0){
+                } else if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) && emotionLevel < 0) {
                     valueMinus = valueMinus + emotionLevel;
                 }
             }
             if (valuePlus > 0) {
                 values.add(new PieEntry(valuePlus, "+ " + items.get(i).getEmotionName()));
             }
-            if (valueMinus < 0){
+            if (valueMinus < 0) {
                 values.add(new PieEntry(valueMinus * (-1), "- " + items.get(i).getEmotionName()));
             }
         }

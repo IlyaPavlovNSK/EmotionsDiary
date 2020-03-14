@@ -1,18 +1,24 @@
 package com.pavlovnsk.emotionsdiary.Fragments;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.pavlovnsk.emotionsdiary.Data.Utils;
 import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
 import com.pavlovnsk.emotionsdiary.GlobalModule;
 import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
@@ -24,16 +30,16 @@ import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.StatisticFragmentCompo
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-
-import ru.slybeaver.slycalendarview.SlyCalendarDialog;
 
 public class StatisticsFragment extends Fragment {
 
     private PieChart pieChart;
     private TextView textViewDate;
-    @Inject AppDataBase6 db;
+    @Inject
+    AppDataBase6 db;
     private List<EmotionForItem> emotionItems;
 
     @Nullable
@@ -57,25 +63,35 @@ public class StatisticsFragment extends Fragment {
     private FloatingActionButton.OnClickListener listener = new FloatingActionButton.OnClickListener() {
         @Override
         public void onClick(View view) {
-            assert getFragmentManager() != null;
-            new SlyCalendarDialog().setSingle(false).setCallback(callback).show(getFragmentManager(), "TAG_SLYCALENDAR");
-        }
-    };
+            final Calendar calendar = Calendar.getInstance();
+            MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.dateRangePicker();
+            CalendarConstraints.Builder calendarConstraints = new CalendarConstraints.Builder().setValidator(new CalendarConstraints.DateValidator() {
+                @Override
+                public boolean isValid(long date) {
+                    return calendar.getTime().after(new Date(date));
+                }
+                @Override
+                public int describeContents() {
+                    return 0;
+                }
 
-    private SlyCalendarDialog.Callback callback = new SlyCalendarDialog.Callback() {
-        @Override
-        public void onCancelled() {
-        }
+                @Override
+                public void writeToParcel(Parcel parcel, int i) {
 
-        @Override
-        public void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes) {
-            Date now = new Date();
-            if (firstDate != null && firstDate.getTime().after(now)||
-                    secondDate != null && secondDate.getTime().after(now)) {
-                Toast.makeText(getContext(), "Вы выбрали ненаступившую дату", Toast.LENGTH_SHORT).show();
-            }
-            DataSettings dataSettings = new DataSettings(pieChart, textViewDate, emotionItems, db);
-            dataSettings.onDataSelected(firstDate, secondDate);
+                }
+            }).setEnd(calendar.getTimeInMillis());
+            builder.setCalendarConstraints(calendarConstraints.build());
+            MaterialDatePicker picker = builder.build();
+            picker.show(getFragmentManager(), "date_picker");
+
+
+            picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
+                @Override
+                public void onPositiveButtonClick(Pair<Long, Long> selection) {
+                    DataSettings dataSettings = new DataSettings(pieChart, textViewDate, emotionItems, db);
+                    dataSettings.onDataSelected(selection.first, selection.second);
+                }
+            });
         }
     };
 }
