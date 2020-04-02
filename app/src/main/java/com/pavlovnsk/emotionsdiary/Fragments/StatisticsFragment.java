@@ -63,7 +63,7 @@ public class StatisticsFragment extends Fragment {
 
         btnData.setOnClickListener(listener);
 
-        pieChart.setNoDataText("выберите даты");
+        pieChart.setNoDataText(getString(R.string.select_dates));
 
         return view;
     }

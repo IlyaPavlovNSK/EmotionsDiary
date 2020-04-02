@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
         android:gravity="start"
-        android:hint="Название эмоции"
+        android:hint="@string/name_of_emotion"
         android:inputType="text"
         android:textSize="30sp"
         android:textStyle="bold|italic"
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20sp"
         android:gravity="start"
-        android:hint="Описание эмоции"
+        android:hint="@string/emotion_description"
         android:inputType="text"
         android:textSize="15sp"
         android:textStyle="italic"
@@ -52,6 +52,6 @@
         android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Добавить"/>
+        android:text="@string/add_emotion"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

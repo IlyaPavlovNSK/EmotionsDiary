@@ -1,43 +1,33 @@
 package com.pavlovnsk.emotionsdiary.Data;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
-import androidx.room.OnConflictStrategy;
-import androidx.sqlite.db.SupportSQLiteDatabase;
-import com.pavlovnsk.emotionsdiary.R;
-import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Utils {
 
-    private static final String TABLE_NAME_ITEM = "EmotionForItem";
+    public static final String TABLE_NAME_ITEM = "EmotionForItem";
 
-    private static final String KEY_ID = "emotionId";
-    private static final String KEY_NAME = "emotionName";
-    private static final String KEY_LEVEL = "emotionLevel";
-    private static final String KEY_DATE = "date";
-    private static final String KEY_DESCRIPTION = "description";
-    private static final String KEY_PIC = "emotionPic";
+    public static final String KEY_ID = "emotionId";
+    public static final String KEY_NAME = "emotionName";
+    public static final String KEY_LEVEL = "emotionLevel";
+    public static final String KEY_DATE = "date";
+    public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_PIC = "emotionPic";
 
     public static final SimpleDateFormat FULL_DATE = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     public static final SimpleDateFormat SIMPLE_DATE = new SimpleDateFormat("dd.MM.yyyy");
     public static final SimpleDateFormat DATE_FOR_ROOM = new SimpleDateFormat("yyyy.MM.dd.HH.mm");
 
-    static Bitmap decodeSampledBitmapFromResource(Resources res, int id) {
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int id) {
         int reqWidth = 480;
         int reqHeight = 720;
         // Читаем с inJustDecodeBounds=true для определения размеров
@@ -83,31 +73,6 @@ public class Utils {
         return inSampleSize;
     }
 
-    private static void getEmotionForItem(SupportSQLiteDatabase supportSQLiteDatabase, Context context){
-        List<EmotionForItem> items = new ArrayList<>();
-        long date = new Date().getTime();
-        items.add(new EmotionForItem(R.string.happy, "0 %", "Я испытываю радость", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.happy), context)));
-        items.add(new EmotionForItem("удивление", "0 %", "Я испытываю удивление", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.surprise), context)));
-        items.add(new EmotionForItem("печаль", "0 %", "Я испытываю печаль", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.sadness), context)));
-        items.add(new EmotionForItem("гнев", "0 %", "Я испытываю гнев", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.anger), context)));
-        items.add(new EmotionForItem("отвращение", "0 %", "Я испытываю отвращение", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.disgust), context)));
-        items.add(new EmotionForItem("презрение", "0 %", "Я испытываю презрение", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.contempt), context)));
-        items.add(new EmotionForItem("страх", "0 %", "Я испытываю страх", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.fear), context)));
-
-        for (int i = 0; i < items.size(); i++) {
-            ContentValues contentValues = new ContentValues();
-            EmotionForItem item = items.get(i);
-
-            contentValues.put(Utils.KEY_NAME, item.getEmotionName().trim());
-            contentValues.put(Utils.KEY_LEVEL, item.getEmotionLevel().trim());
-            contentValues.put(Utils.KEY_DESCRIPTION, item.getDescription().trim());
-            contentValues.put(Utils.KEY_DATE, item.getDate());
-            contentValues.put(Utils.KEY_PIC, item.getEmotionPic());
-
-            supportSQLiteDatabase.insert(Utils.TABLE_NAME_ITEM, OnConflictStrategy.IGNORE, contentValues);
-        }
-    }
-
     public static String saveToInternalStorage(Bitmap bitmapImage, Context context) {
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
@@ -135,19 +100,5 @@ public class Utils {
             }
         }
         return mypath.getAbsolutePath();
-    }
-
-    public static void createDB(SupportSQLiteDatabase supportSQLiteDatabase, Context context){
-
-        String CREATE_ITEM_TABLE = "CREATE TABLE IF NOT EXISTS " + Utils.TABLE_NAME_ITEM + "("
-                + Utils.KEY_ID + " INTEGER PRIMARY KEY,"
-                + Utils.KEY_NAME + " TEXT,"
-                + Utils.KEY_LEVEL + " TEXT,"
-                + Utils.KEY_DESCRIPTION + " TEXT,"
-                + Utils.KEY_DATE + " INTEGER,"
-                + Utils.KEY_PIC + " TEXT" + ")";
-
-        supportSQLiteDatabase.execSQL(CREATE_ITEM_TABLE);
-        getEmotionForItem(supportSQLiteDatabase, context);
     }
 }

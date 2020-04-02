@@ -50,28 +50,25 @@ public class MainActivity extends AppCompatActivity implements MenuViewHolder.On
         menuRecyclerView.setHasFixedSize(true);
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
-            switch (item.getItemId()) {
-                case R.id.navigation_emotion:
-                    selectedFragment = new EmotionsFragment();
-                    break;
-                case R.id.navigation_statistic:
-                    selectedFragment = new StatisticsFragment();
-                    break;
-                case R.id.navigation_info:
-                    selectedFragment = new EmotionsHistoryFragment();
-                    break;
-                default:
-                    break;
-            }
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-            }
-            return true;
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
+        Fragment selectedFragment = null;
+        switch (item.getItemId()) {
+            case R.id.navigation_emotion:
+                selectedFragment = new EmotionsFragment();
+                break;
+            case R.id.navigation_statistic:
+                selectedFragment = new StatisticsFragment();
+                break;
+            case R.id.navigation_info:
+                selectedFragment = new EmotionsHistoryFragment();
+                break;
+            default:
+                break;
         }
+        if (selectedFragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+        }
+        return true;
     };
 
     @Override
@@ -80,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements MenuViewHolder.On
             case 0:
                 Intent intent = new Intent(this, ListEmotionsItemActivity.class);
                 startActivity(intent);
+            case 1:
+
         }
     }
 
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements MenuViewHolder.On
         if (back_pressed + 2000 > System.currentTimeMillis())
             super.onBackPressed();
         else
-            Toast.makeText(getBaseContext(), "Нажмите еще раз для выхода", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), getText(R.string.click_again_to_exit), Toast.LENGTH_SHORT).show();
         back_pressed = System.currentTimeMillis();
     }
 }

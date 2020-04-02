@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">emotions diary</string>
+    <string name="app_name">Emotions diary</string>
 
     <string name="happy">Happy</string>
     <string name="surprise">Surprise</string>
     <string name="sadness">Sadness</string>
     <string name="anger">Anger</string>
-    <string name="disgust">disgust</string>
+    <string name="disgust">Disgust</string>
     <string name="contempt">Contempt</string>
     <string name="fear">Fear</string>
 
@@ -17,10 +17,10 @@
     <string name="statistic">statistic</string>
     <string name="history">history</string>
 
-    <string name="list_of_emotions">список эмоций</string>
+    <string name="list_of_emotions">list of emotions</string>
     <string name="language">language</string>
     <string name="share">share</string>
-    <string name="about_the_program">о about the program</string>
+    <string name="about_the_program">о about</string>
 
     <string name="i_feel_joy">I feel joy</string>
     <string name="i_am_surprised">I am surprised</string>

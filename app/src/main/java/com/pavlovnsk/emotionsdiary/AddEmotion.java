@@ -83,7 +83,7 @@ public class AddEmotion extends AppCompatActivity {
 
             startActivity(new Intent(AddEmotion.this, MainActivity.class));
         } else {
-            Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.fill_in_all_the_fields), Toast.LENGTH_SHORT).show();
         }
     }
 

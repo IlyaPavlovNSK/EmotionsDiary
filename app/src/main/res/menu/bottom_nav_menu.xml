@@ -4,16 +4,16 @@
     <item
         android:id="@+id/navigation_emotion"
         android:icon="@drawable/ic_emotion"
-        android:title="Эмоции" />
+        android:title="@string/emotions" />
 
     <item
         android:id="@+id/navigation_statistic"
         android:icon="@drawable/ic_statistic"
-        android:title="Статистика" />
+        android:title="@string/statistic" />
 
     <item
         android:id="@+id/navigation_info"
         android:icon="@drawable/ic_informations"
-        android:title="История" />
+        android:title="@string/history" />
 
 </menu>
