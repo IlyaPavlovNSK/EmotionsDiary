@@ -2,17 +2,20 @@ package com.pavlovnsk.emotionsdiary.Adapters.EmotionListSmall;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
+import com.pavlovnsk.emotionsdiary.Room.AppRoomDataBase;
 import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 import com.pavlovnsk.emotionsdiary.R;
 
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class EmotionsAdapterSmall extends RecyclerView.Adapter<EmotionViewHolderSmall> implements ItemTouchHelperAdapter {
 
@@ -20,14 +23,12 @@ public class EmotionsAdapterSmall extends RecyclerView.Adapter<EmotionViewHolder
     private List<EmotionForItem> emotions;
     private EmotionForItem deletedItem;
     private int keyPosition;
+    private AppRoomDataBase db;
 
-    @Inject
-    AppDataBase6 db;
-
-    @Inject
-    EmotionsAdapterSmall(EmotionsListPresenterSmall emotionsListPresenterSmall) {
+    public EmotionsAdapterSmall(EmotionsListPresenterSmall emotionsListPresenterSmall, List<EmotionForItem> emotions, AppRoomDataBase db) {
         this.presenterSmall = emotionsListPresenterSmall;
-        this.emotions = emotionsListPresenterSmall.getEmotions();
+        this.emotions = emotions;
+        this.db = db;
     }
 
     @NonNull
@@ -73,14 +74,24 @@ public class EmotionsAdapterSmall extends RecyclerView.Adapter<EmotionViewHolder
     }
 
     @Override
-    public void returnItem(int position){
-        db.emotionForItemDao().addEmotionItem(deletedItem);
+    public void returnItem(int position) {
+        Completable.fromAction(() -> db.emotionForItemDao().addEmotionItem(deletedItem))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+
         emotions.add(keyPosition, deletedItem);
+        //db.close();
         notifyDataSetChanged();
     }
 
     @Override
     public void removeItem() {
-        db.emotionForItemDao().deleteEmotionItem(deletedItem);
+        Completable.fromAction(() -> db.emotionForItemDao().deleteEmotionItem(deletedItem))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+        notifyDataSetChanged();
+        //db.close();
     }
 }

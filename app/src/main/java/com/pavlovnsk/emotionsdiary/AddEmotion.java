@@ -9,14 +9,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.pavlovnsk.emotionsdiary.Data.Utils;
-import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
+import com.pavlovnsk.emotionsdiary.Room.AppRoomDataBase;
 import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 
 import java.io.FileNotFoundException;
@@ -25,6 +24,11 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class AddEmotion extends AppCompatActivity {
 
     private final int PICK_IMAGE = 2;
@@ -32,8 +36,10 @@ public class AddEmotion extends AppCompatActivity {
     private EditText addName;
     private EditText addDescription;
     private ImageView addPic;
+    private Disposable disposable;
 
-    @Inject AppDataBase6 db;
+    @Inject
+    AppRoomDataBase db;
     @Inject Context context;
 
     @Override
@@ -52,27 +58,30 @@ public class AddEmotion extends AppCompatActivity {
         addEmotion.setOnClickListener(addEmotionListener);
     }
 
-    private ImageView.OnClickListener addPicListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            addNewEmotionImage();
-        }
-    };
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
+        db.close();
+    }
 
-    private Button.OnClickListener addEmotionListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            addEmotionInDataBase();
-        }
-    };
+    private ImageView.OnClickListener addPicListener = view -> addNewEmotionImage();
+
+    private Button.OnClickListener addEmotionListener = view -> addEmotionInDataBase();
 
     private void addEmotionInDataBase() {
         if (addName.getText().length() != 0 && addDescription.getText().length() != 0 && addPic.getDrawable() != null) {
 
             final String bitmapAdress = Utils.saveToInternalStorage(((BitmapDrawable) addPic.getDrawable()).getBitmap(), context);
             final long date = new Date().getTime();
-            db.emotionForItemDao().addEmotionItem(new EmotionForItem(addName.getText().toString(), "0 %", addDescription.getText().toString(), date, bitmapAdress));
-            startActivity(new Intent(AddEmotion.this, ListEmotionsItemActivity.class));
+
+            EmotionForItem emotionForItem = new EmotionForItem(addName.getText().toString(), "0 %", addDescription.getText().toString(), date, bitmapAdress);
+            disposable = Completable.fromAction(() -> db.emotionForItemDao().addEmotionItem(emotionForItem))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
+
+            startActivity(new Intent(AddEmotion.this, MainActivity.class));
         } else {
             Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
         }

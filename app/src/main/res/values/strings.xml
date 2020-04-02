@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">EmotionsDiary</string>
+
+    <string name="happy">радость</string>
+    <string name="surprise">удивление</string>
+    <string name="sadness">печаль</string>
+    <string name="anger">гнев</string>
+    <string name="disgust">отвращение</string>
+    <string name="contempt">презрение</string>
+    <string name="fear">страх</string>
 </resources>

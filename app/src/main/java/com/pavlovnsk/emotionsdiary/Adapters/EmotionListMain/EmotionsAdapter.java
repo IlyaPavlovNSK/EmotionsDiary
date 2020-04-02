@@ -5,13 +5,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.pavlovnsk.emotionsdiary.R;
 
-import javax.inject.Inject;
-
 public class EmotionsAdapter extends RecyclerView.Adapter<EmotionViewHolder> {
 
     private EmotionsListPresenter presenter;
 
-    @Inject
     public EmotionsAdapter(EmotionsListPresenter presenter) {
         this.presenter = presenter;
     }

@@ -1,17 +1,15 @@
 package com.pavlovnsk.emotionsdiary.Adapters.EmotionListMain;
-import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
-import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
-import java.util.List;
 
-import javax.inject.Inject;
+import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
+
+import java.util.List;
 
 public class EmotionsListPresenter {
 
     private List<EmotionForItem> emotions;
 
-    @Inject
-    EmotionsListPresenter(AppDataBase6 db) {
-        emotions = db.emotionForItemDao().getEmotionsItem();
+    public EmotionsListPresenter(List<EmotionForItem> emotions) {
+        this.emotions = emotions;
     }
 
     void onBindEmotionsRowViewAtPosition(int position, EmotionRowView rowView) {

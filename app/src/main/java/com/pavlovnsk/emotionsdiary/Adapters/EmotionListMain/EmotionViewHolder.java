@@ -3,6 +3,7 @@ package com.pavlovnsk.emotionsdiary.Adapters.EmotionListMain;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class EmotionViewHolder extends RecyclerView.ViewHolder implements Emotio
 
         emotionSeekBar.setOnSeekBarChangeListener(this);
         emotionSeekBar.getThumb().mutate().setAlpha(0);
+        Log.d("myTag", "EmotionViewHolder - constructor", null);
     }
 
     @Override

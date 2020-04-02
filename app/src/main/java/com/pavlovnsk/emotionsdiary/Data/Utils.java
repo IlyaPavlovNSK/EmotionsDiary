@@ -86,7 +86,7 @@ public class Utils {
     private static void getEmotionForItem(SupportSQLiteDatabase supportSQLiteDatabase, Context context){
         List<EmotionForItem> items = new ArrayList<>();
         long date = new Date().getTime();
-        items.add(new EmotionForItem("радость", "0 %", "Я испытываю радость", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.happy), context)));
+        items.add(new EmotionForItem(R.string.happy, "0 %", "Я испытываю радость", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.happy), context)));
         items.add(new EmotionForItem("удивление", "0 %", "Я испытываю удивление", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.surprise), context)));
         items.add(new EmotionForItem("печаль", "0 %", "Я испытываю печаль", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.sadness), context)));
         items.add(new EmotionForItem("гнев", "0 %", "Я испытываю гнев", date, saveToInternalStorage(decodeSampledBitmapFromResource(context.getResources(), R.drawable.anger), context)));

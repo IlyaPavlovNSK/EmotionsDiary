@@ -2,7 +2,6 @@ package com.pavlovnsk.emotionsdiary.Fragments;
 
 import android.os.Bundle;
 import android.os.Parcel;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,8 @@ import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.pavlovnsk.emotionsdiary.Data.Utils;
-import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
+import com.pavlovnsk.emotionsdiary.Room.AppRoomDataBase;
 import com.pavlovnsk.emotionsdiary.GlobalModule;
-import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 import com.pavlovnsk.emotionsdiary.R;
 import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.DaggerStatisticFragmentComponent;
 import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.DataSettings;
@@ -29,27 +26,37 @@ import com.pavlovnsk.emotionsdiary.StatisticFragmentUtils.StatisticFragmentCompo
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class StatisticsFragment extends Fragment {
 
     private PieChart pieChart;
     private TextView textViewDate;
+
+    private Disposable disposableItems;
+    private Disposable disposableHistory;
+
+    private CompositeDisposable compositeDisposable;
+
     @Inject
-    AppDataBase6 db;
-    private List<EmotionForItem> emotionItems;
+    AppRoomDataBase db;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         StatisticFragmentComponent statisticFragmentComponent = DaggerStatisticFragmentComponent.builder().globalModule(new GlobalModule(getContext())).build();
         statisticFragmentComponent.inject(this);
-        View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
-        emotionItems = db.emotionForItemDao().getEmotionsItem();
+        View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+        compositeDisposable = new CompositeDisposable();
+
         pieChart = view.findViewById(R.id.pie_chart);
         FloatingActionButton btnData = view.findViewById(R.id.btn_data);
         textViewDate = view.findViewById(R.id.text_View_Date);
@@ -57,6 +64,7 @@ public class StatisticsFragment extends Fragment {
         btnData.setOnClickListener(listener);
 
         pieChart.setNoDataText("выберите даты");
+
         return view;
     }
 
@@ -70,6 +78,7 @@ public class StatisticsFragment extends Fragment {
                 public boolean isValid(long date) {
                     return calendar.getTime().after(new Date(date));
                 }
+
                 @Override
                 public int describeContents() {
                     return 0;
@@ -77,21 +86,47 @@ public class StatisticsFragment extends Fragment {
 
                 @Override
                 public void writeToParcel(Parcel parcel, int i) {
-
                 }
             }).setEnd(calendar.getTimeInMillis());
             builder.setCalendarConstraints(calendarConstraints.build());
             MaterialDatePicker picker = builder.build();
-            picker.show(getFragmentManager(), "date_picker");
 
+            if (getFragmentManager() != null) {
+                picker.show(getFragmentManager(), "date_picker");
+            }
 
-            picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
-                @Override
-                public void onPositiveButtonClick(Pair<Long, Long> selection) {
-                    DataSettings dataSettings = new DataSettings(pieChart, textViewDate, emotionItems, db);
-                    dataSettings.onDataSelected(selection.first, selection.second);
+            picker.addOnPositiveButtonClickListener((MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>) selection -> {
+                Long first = selection.first;
+                Long second = selection.second;
+
+                if (first != null && second != null) {
+
+                    disposableItems = db.emotionForItemDao().getEmotionsItem()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(emotionsItems -> {
+                                DataSettings dataSettings = new DataSettings(pieChart, textViewDate, emotionsItems, first, second);
+                                dataSettings.writeDate();
+
+                                disposableHistory = db.emotionForHistoryDao().getEmotions(first, second + TimeUnit.DAYS.toMillis(1))
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(dataSettings::onDataSelected);
+
+                                compositeDisposable.add(disposableHistory);
+                            });
+                    compositeDisposable.add(disposableItems);
                 }
             });
         }
     };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (compositeDisposable.size() > 0) {
+            compositeDisposable.dispose();
+        }
+        db.close();
+    }
 }

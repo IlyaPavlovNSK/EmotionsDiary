@@ -1,14 +1,13 @@
 package com.pavlovnsk.emotionsdiary;
 
 import android.content.Context;
-import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
-
+import com.pavlovnsk.emotionsdiary.Room.AppRoomDataBase;
 import com.pavlovnsk.emotionsdiary.Data.Utils;
 import com.pavlovnsk.emotionsdiary.POJO.MenuItem;
 
@@ -48,15 +47,19 @@ public class GlobalModule {
 
     @Provides
     @Singleton
-    AppDataBase6 getAppDatabase() {
+    AppRoomDataBase getAppDatabase() {
         RoomDatabase.Callback callback = new RoomDatabase.Callback() {
             public void onCreate(SupportSQLiteDatabase db) {
                 Utils.createDB(db, context);
             }
+
+            @Override
+            public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                super.onOpen(db);
+            }
         };
-        AppDataBase6 db = Room.databaseBuilder(context, AppDataBase6.class, "AppDataBase6").fallbackToDestructiveMigration().allowMainThreadQueries().addCallback(callback).build();
-        db.query("select 1", null);
-        return db;
+        return Room.databaseBuilder(context, AppRoomDataBase.class, "AppRoomDataBase").addCallback(callback).build();
     }
+
 }
 

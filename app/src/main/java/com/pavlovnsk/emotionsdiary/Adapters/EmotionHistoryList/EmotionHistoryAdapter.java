@@ -8,13 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pavlovnsk.emotionsdiary.R;
 
-import javax.inject.Inject;
-
 public class EmotionHistoryAdapter extends RecyclerView.Adapter<EmotionHistoryViewHolder> {
 
     private EmotionHistoryPresenter emotionHistoryPresenter;
 
-    @Inject
     public EmotionHistoryAdapter(EmotionHistoryPresenter emotionHistoryPresenter) {
         this.emotionHistoryPresenter = emotionHistoryPresenter;
     }

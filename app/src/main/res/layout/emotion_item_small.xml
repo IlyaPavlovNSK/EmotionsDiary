@@ -7,9 +7,9 @@
     android:id="@+id/emotion_item_small"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/darker_gray"
+    android:background="?attr/selectableItemBackground"
     app:cardCornerRadius="8dp"
-    card_view:cardElevation="2dp"
+    card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -21,20 +21,13 @@
             android:id="@+id/text_view_emotion_item_name_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Злость"
             android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/text_view_emotion_item_description_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="я испытываю злость"
             android:textSize="15sp"
             />
-
     </LinearLayout>
-
-
-
-
 </androidx.cardview.widget.CardView>

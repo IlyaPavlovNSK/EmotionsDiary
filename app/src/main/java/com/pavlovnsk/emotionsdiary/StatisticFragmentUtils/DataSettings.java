@@ -1,10 +1,10 @@
 package com.pavlovnsk.emotionsdiary.StatisticFragmentUtils;
 
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieEntry;
-import com.pavlovnsk.emotionsdiary.Room.AppDataBase6;
 import com.pavlovnsk.emotionsdiary.Data.Utils;
 import com.pavlovnsk.emotionsdiary.Room.EmotionForHistory;
 import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
@@ -12,7 +12,6 @@ import com.pavlovnsk.emotionsdiary.Room.EmotionForItem;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -22,23 +21,21 @@ public class DataSettings {
 
     private PieChart pieChart;
     private TextView textViewDate;
+    private long firstDate;
+    private long secondDate;
+    private List<EmotionForItem> emotionsItems;
     private ArrayList<PieEntry> values = new ArrayList<>();
-    private List<EmotionForItem> items;
-    private AppDataBase6 db;
 
     @Inject
-    public DataSettings(PieChart pieChart, TextView textViewDate, List<EmotionForItem> items, AppDataBase6 db) {
+    public DataSettings(PieChart pieChart, TextView textViewDate, List<EmotionForItem> emotionsItems, long firstDate, long secondDate) {
         this.pieChart = pieChart;
         this.textViewDate = textViewDate;
-        this.items = items;
-        this.db = db;
+        this.emotionsItems = emotionsItems;
+        this.firstDate = firstDate;
+        this.secondDate = secondDate;
     }
 
-    public void onDataSelected(long firstDate, long secondDate) {
-
-        PieChartSettings.pieChartPrimarySettings(pieChart);
-        PieChartSettings.pieChartLegendSettings(pieChart);
-
+    public void writeDate() {
         String stringFirstDay = simpleDate.format(firstDate);
         textViewDate.setText(stringFirstDay);
 
@@ -46,27 +43,34 @@ public class DataSettings {
             String stringSecondDay = simpleDate.format(secondDate);
             textViewDate.append(" - " + stringSecondDay);
         }
+    }
 
-        List<EmotionForHistory> emotionItems = db.emotionForHistoryDao().getEmotions(firstDate, secondDate + TimeUnit.DAYS.toMillis(1));
+    public void onDataSelected(List<EmotionForHistory> emotionsHistory) {
+        PieChartSettings.pieChartPrimarySettings(pieChart);
+        PieChartSettings.pieChartLegendSettings(pieChart);
 
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < emotionsItems.size(); i++) {
+            Log.d("myTag", "emotionsItems.size - " + emotionsItems.size());
+            Log.d("myTag", "emotionsHistory.size - " + emotionsHistory.size());
+
             float valuePlus = 0;
             float valueMinus = 0;
-            for (int j = 0; j < emotionItems.size(); j++) {
-                int emotionLevel = Integer.parseInt(emotionItems.get(j).getEmotionLevel().substring(0, emotionItems.get(j).getEmotionLevel().length() - 2));
-                if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) && emotionLevel > 0) {
+            for (int j = 0; j < emotionsHistory.size(); j++) {
+                int emotionLevel = Integer.parseInt(emotionsHistory.get(j).getEmotionLevel().substring(0, emotionsHistory.get(j).getEmotionLevel().length() - 2));
+                if (emotionsItems.get(i).getEmotionName().equals(emotionsHistory.get(j).getEmotionName()) && emotionLevel > 0) {
                     valuePlus = valuePlus + emotionLevel;
-                } else if (items.get(i).getEmotionName().equals(emotionItems.get(j).getEmotionName()) && emotionLevel < 0) {
+                } else if (emotionsItems.get(i).getEmotionName().equals(emotionsHistory.get(j).getEmotionName()) && emotionLevel < 0) {
                     valueMinus = valueMinus + emotionLevel;
                 }
             }
             if (valuePlus > 0) {
-                values.add(new PieEntry(valuePlus, "+ " + items.get(i).getEmotionName()));
+                values.add(new PieEntry(valuePlus, "+ " + emotionsItems.get(i).getEmotionName()));
             }
             if (valueMinus < 0) {
-                values.add(new PieEntry(valueMinus * (-1), "- " + items.get(i).getEmotionName()));
+                values.add(new PieEntry(valueMinus * (-1), "- " + emotionsItems.get(i).getEmotionName()));
             }
         }
         PieChartSettings.pieChartSecondSettings(pieChart, values);
+        pieChart.notifyDataSetChanged();
     }
 }

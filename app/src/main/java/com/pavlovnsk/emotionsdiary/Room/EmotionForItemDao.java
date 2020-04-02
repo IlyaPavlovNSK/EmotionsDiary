@@ -7,17 +7,16 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface EmotionForItemDao {
 
     @Insert
     void addEmotionItem(EmotionForItem item);
 
-    @Insert
-    void addDefaultEmotionItem(List<EmotionForItem> items);
-
     @Query("SELECT * FROM EmotionForItem")
-    List<EmotionForItem> getEmotionsItem();
+    Flowable<List<EmotionForItem>> getEmotionsItem();
 
     @Delete
     void deleteEmotionItem(EmotionForItem item);

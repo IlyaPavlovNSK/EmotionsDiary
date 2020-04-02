@@ -12,7 +12,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
-class PieChartSettings {
+public class PieChartSettings {
 
     static void pieChartPrimarySettings(PieChart pieChart){
         pieChart.setUsePercentValues(true);
